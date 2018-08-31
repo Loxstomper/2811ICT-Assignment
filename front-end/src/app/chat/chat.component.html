@@ -1,0 +1,15 @@
+
+<div id="container">
+    <div id="chat">
+        <div *ngFor="let message of messages" class="message">
+            <p> {{ message.text.split('\n')[0] }} </p>
+            <p> {{ message.text.split('\n')[1] }} </p>
+        </div>
+    </div>
+
+    <div id="input">
+        <input [(ngModel)]="message" type="text" id="message_input" placeholder="message" class="form-control">
+        <button (click)="sendMessage(message)" id="send"> Send </button>
+    </div>
+</div>
+

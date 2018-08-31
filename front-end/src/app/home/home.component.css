@@ -1,0 +1,37 @@
+#container {
+    width: 450px;
+    height: 200px;
+    background-color: #2c2f33;
+
+    position:absolute; /*it can be fixed too*/
+    left:0; right:0;
+    top:0; bottom:0;
+    margin:auto;
+
+    /*this to solve "the content will not be cut when the window is smaller than the content": */
+    max-width:100%;
+    max-height:100%;
+    overflow:auto;
+}
+
+#content
+{
+    padding: 5%;
+}
+
+#enter {
+    margin-top: 10px;
+    width: 50%;
+    margin-left: 25%;
+}
+
+#name {
+    width: 80%;
+    margin-left: 7%;
+}
+
+h1 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    margin-left: 50px;
+}
