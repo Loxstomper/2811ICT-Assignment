@@ -64,6 +64,15 @@
     <input type="submit" value="submit">
 </form>
 
+<h2> invite users </h2>
+<form action="/api/channels/invite", method="post">
+    Username: <input type="text" name="username">
+    <br>
+    Channel ID: <input type="number" name="channel_id">
+    <br>
+    <input type="submit" value="submit">
+</form>
+
 <h2> Delete channels </h2>
 <form action="/api/channels/delete", method="post">
     Channel ID: <input type="number" name="channel_id">

@@ -219,6 +219,12 @@ app.post("/api/groups/create", function(req, res){
   let new_group = {group_id:new_id, name:group_name, channel_ids:[], admin_ids:[], user_ids:[]};
   groups.push(new_group);
 
+  fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
   res.send("CREATED GROUP");
 })
 
@@ -257,10 +263,6 @@ app.post("/api/channels/create", function(req, res){
   let new_channel = {channel_id:new_id, name:channel_name, group_id:group_id, user_ids:[]};
   channels.push(new_channel);
 
-  console.log(channels);
-
-  console.log("TEST: " + JSON.stringify(channels[channels.length -1]));
-
   // also need to update the channel_ids in the group
   groups[group_id].channel_ids.push(new_id);
 
@@ -283,6 +285,115 @@ app.post("/api/channels/create", function(req, res){
 // GROUP ADMIN CREATE/INVITE USERS TO A CHANNEL
   // - if user exists just put them in the channel
   // - if user doesnt exist, create and put them in the channel
+
+app.post("/api/channels/invite", function(req, res){
+  let username = req.body.username;
+  let channel_id = req.body.channel_id;
+  let user_id;
+  let group_id;
+  let user_object_index;
+  let user_exists;
+
+  console.log("USERNAME: " + username);
+
+  // check if user exists
+  for (let i = 0; i < users.length; i ++)
+  {
+    if (users[i].username == username)
+    {
+      user_exists = 1;
+      user_object_index = i;
+      user_id = users[i].user_id;
+      break;
+    }
+  }
+
+
+  if (!user_exists)
+  {
+    console.log("NEED TO CREATE USER: " + username);
+
+    let new_id = 0;
+
+    // getting the user_id
+    for (let i = 0; i < users.length; i ++)
+    {
+      if (users[i].user_id > new_id)
+      {
+        new_id = users[i].user_id;
+      }
+    }
+
+    new_id ++;
+
+    user_id = new_id;
+
+    let new_user = {user_id: new_id, username:username, email:"", group_ids:[]};
+    // adds to the user
+    users.push(new_user);
+    user_object_index = users.length - 1;
+  }
+
+  // find out what the group is that the channel is in
+
+  // find the channel and do a lookup
+  for (let i = 0; i < channels.length; i ++)
+  {
+    if (channels[i].channel_id == channel_id)
+    {
+      // add the user id to the channel
+      channels[i].user_ids.push(user_id);
+      group_id = channels[i].group_id;
+
+    }
+  }
+
+  // add the user to the group
+  // find out the group object
+  for (let i = 0; i < groups.length; i ++)
+  {
+    if (groups[i].group_id == group_id)
+    {
+      // add the user to the group
+      groups[i].user_ids.push(user_id);
+    } 
+  }
+
+  // add that group id to the user
+  users[user_object_index].group_ids.push(group_id);
+
+
+  // save changes to files
+  // write users to file
+  fs.writeFile(user_file, JSON.stringify(users), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
+
+  // write groups to file
+  if (groups_modified)
+  {
+    fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
+      if (err) {
+          console.log(err);
+      }
+    });
+  }
+
+  // write channels to file
+  if (channels_modified)
+  {
+    fs.writeFile(channels_file, JSON.stringify(channels), function(err) {
+      if (err) {
+          console.log(err);
+      }
+    });
+  }
+
+  res.send("ADDED USER TO CHANNEL");
+})
 
 
 // GROUP ADMIN MAKE USER A GROUP ADMIN OF THE GROUP
