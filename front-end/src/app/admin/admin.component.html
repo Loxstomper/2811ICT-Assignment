@@ -1,5 +1,5 @@
 
-<!-- <h1> HELLO {{username}} </h1> -->
+<h1> Admin Page: {{username}} </h1>
 
 <div id="users">
     <h3> Users </h3>
@@ -24,6 +24,7 @@
     </div>
 
     <br><br><br>
+    <h4> Create users </h4>
     <div id="form">
         <form (submit)="create_user($event)" ngNoForm>
             <input [(ngModel)]="username" type="text" placeholder='username'>
@@ -32,12 +33,69 @@
             <br>
             <input [(ngModel)]="super_admin" type="checkbox">
             <br>
-            <button type="submit">Submit</button>
+            <button type="submit">Create</button>
         </form>
     </div>
 
+    <h4> Delete users </h4>
+    <!-- <div id="form">
+        <form (submit)="delete_user($event)" ngNoForm>
+            <select>
+                <option *ngFor="let user of users" [value]="user.user_id">
+                    {{ user.username }}
+                </option>
+            </select>
+            <button type="submit">Delete</button>
+        </form> -->
+    <!-- </div> -->
 </div>
 
 <h3> Groups </h3>
 
+    <h4> Create group </h4>
+    <form (submit)="create_group($event)" ngNoForm>
+        <input [(ngModel)]="group_name" type="text" placeholder='group name'>
+        <br>
+        <button type="submit">Create</button>
+    </form>
+
+    <h4> Delete group</h4>
+    <form (submit)="delete_group($event)" ngNoForm>
+        <input [(ngModel)]="group_id" type="number">
+        <br>
+        <button type="submit">Delete</button>
+    </form>
+
+    <h4> Make group admin </h4>
+    <form (submit)="make_group_admin($event)" ngNoForm>
+        <input [(ngModel)]="group_id" type="number">
+        <br>
+        <input [(ngModel)]="username" type="text" placeholder='username'>
+        <br>
+        <button type="submit">Create Admin</button>
+    </form>
+
 <h3> Channels </h3>
+
+    <h4> Create Channel </h4>
+    <form (submit)="create_channel($event)" ngNoForm>
+        <input [(ngModel)]="channel_name" type="text" placeholder='channel name'>
+        <br>
+        <button type="submit">Create</button>
+    </form>
+
+    <h4> Delete group</h4>
+    <form (submit)="delete_channel($event)" ngNoForm>
+        <input [(ngModel)]="channel_id" type="number">
+        <br>
+        <button type="submit">Delete</button>
+    </form>
+
+    <h4> Invite user </h4>
+    <form (submit="channel_invite_user($event)" ngNoForm>
+        <input [(ngModel)]="channel_id" type="number">
+        <br>
+        <input [(ngModel)]="username" type="text" placeholder='username'>
+        <br>
+        <button type="submit">Invite user</button>
+    </form>
