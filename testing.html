@@ -4,6 +4,18 @@
 
 <body>
 
+<h1> Get Endpoints </h1>
+
+<a href="/api/super_admins"> super admin </a>
+<br>
+<a href="/api/users"> users </a>
+<br>
+<a href="/api/groups"> groups </a>
+<br>
+<a href="/api/channels"> channels </a>
+
+<br><br><br>
+
 <h1> Users </h1>
 <h2> create users </h2>
 
@@ -13,6 +25,13 @@
     Email: <input type="text" name="email">
     <br>
     Super Admin: <input type="checkbox" name="super_admin">
+    <br>
+    <input type="submit" value="submit">
+</form>
+
+<h2> Delete user </h2>
+<form action="/api/users/delete", method="post">
+    ID: <input type="number" name="user_id">
     <br>
     <input type="submit" value="submit">
 </form>

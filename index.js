@@ -56,7 +56,7 @@ var channels = [
   {channel_id: 0, name:"first channel", group_id:0, user_ids:[1]},
 ]
 // routes
-app.get('/test', function(req, res) {
+app.get('/api/test', function(req, res) {
   res.sendFile("./testing.html", {root: __dirname});
 })
 
@@ -136,6 +136,10 @@ app.get('/api/channels/:id', function(req, res) {
 })
 
 // ----------- POST METHODS ----------------- //
+
+
+
+// -- creating -- //
 app.post("/api/users/create", function(req, res)
 {
   // get the username
@@ -255,6 +259,8 @@ app.post("/api/channels/create", function(req, res){
 
   console.log(channels);
 
+  console.log("TEST: " + JSON.stringify(channels[channels.length -1]));
+
   // also need to update the channel_ids in the group
   groups[group_id].channel_ids.push(new_id);
 
@@ -272,6 +278,165 @@ app.post("/api/channels/create", function(req, res){
 
   res.send("CREATED CHANNEL");
 })
+
+// ----- deleting ---- //
+app.post('/api/users/delete/', function(req, res) {
+  let user_id = req.body.user_id;
+  let user_data;
+
+  let super_admin_modified = 0;
+  let groups_modified = 0;
+  let channels_modified = 0;
+
+  for (let i = 0; i < users.length; i ++)
+  {
+    if (users[i].user_id == user_id)
+    {
+      user_data = users[i];
+      // remove from user_data
+      users.splice(i, 1);
+
+      break;
+    }
+  }
+
+  // console.log(user_data);
+
+  if (user_data == null)
+  {
+    res.send("User not found");
+  }
+
+  console.log("DELETEING USER: " + user_data);
+
+  // check if was a super admin
+  for (let i = 0; i < super_admins.length; i ++)
+  {
+    if (super_admins[i].user_id == user_id)
+    {
+      // remove from super_admins
+      super_admins.splice(i, 1);
+      super_admin_modified = 1;
+      console.log("USER was deleted from super_admins");
+
+      break;
+    }
+  }
+
+  // remove user from groups and channels
+
+  // iterate over the group ids that the user is in
+  console.log("USER WAS IN THE FOLLOWING GROUPS: " + user_data.group_ids);
+  for (let group_id = 0; group_id < user_data.group_ids.length; group_id ++)
+  {
+    let group_object_index;
+    // get the actual group object index
+    for (let i = 0; i < groups.length; i ++)
+    {
+      if (groups[i].group_id == group_id)
+      {
+        group_object_index = i; 
+        groups_modified = 1;
+        break;
+      }
+    }
+
+    console.log("IN GROUP: " + user_data.group_ids[group_id]);
+
+    // ------- remove from all channels that the user is a member of -------- //
+    // iterate over the channel ids that are in the group
+    for (let channel_id = 0; channel_id < groups[group_object_index].channel_ids.length; channel_id ++)
+    {
+      // find the actual channel object
+      for (let j = 0; j < channels.length; j ++)
+      {
+        // this is the channel object
+        if (channels[j].channel_id == groups[group_object_index].channel_ids[channel_id])
+        {
+          console.log("USER WAS IN CHANNEL: " + groups[group_object_index].channel_ids[channel_id]);
+          channels_modified = 1;
+          // now need to remove the user from the user_id array
+          for (let k = 0; k < channels[j].user_ids.length; k ++)
+          {
+            if (channels[j].user_ids[k] == user_id)
+            {
+              // remove the user from the user_ids
+              channels[j].user_ids[k].splice(k, 1);
+              break;
+            }
+          }
+
+        }
+      }
+
+    }
+
+    // remove from admin id in the group
+    for (let i = 0; i < groups[group_object_index].admin_ids.length; i ++)
+    {
+      if (groups[group_object_index].admin_ids[i] == user_id)
+      {
+        console.log("USER WAS ADMIN IN GROUP: " + groups[group_object_index].admin_ids[i]);
+        // remove from admin_ids
+        groups[group_object_index].admin_ids.splice(i, 1);
+        break;
+      }
+    }
+
+    // remove from user id in the group
+    for (let i = 0; i < groups[group_object_index].user_ids.length; i ++)
+    {
+      if (groups[group_object_index].user_ids[i] == user_id)
+      {
+        console.log("USER WAS IN GROUP: " + groups[group_object_index].group_id)
+        // remove from user_ids
+        groups[group_object_index].user_ids.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  // write users to file
+  fs.writeFile(user_file, JSON.stringify(users), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
+  // write super_admins to file
+  if (super_admin_modified)
+  {
+    fs.writeFile(super_admins_file, JSON.stringify(super_admins), function(err) {
+      if (err) {
+          console.log(err);
+      }
+    });
+  }
+
+  // write super_admins to file
+  if (groups_modified)
+  {
+    fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
+      if (err) {
+          console.log(err);
+      }
+    });
+  }
+
+  // write channels to file
+  if (channels_modified)
+  {
+    fs.writeFile(channels_file, JSON.stringify(channels), function(err) {
+      if (err) {
+          console.log(err);
+      }
+    });
+  }
+
+  res.send("USER DELETED");
+})
+
+
 
 
 http.listen(3000);
