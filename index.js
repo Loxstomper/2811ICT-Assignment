@@ -279,6 +279,14 @@ app.post("/api/channels/create", function(req, res){
   res.send("CREATED CHANNEL");
 })
 
+
+// GROUP ADMIN CREATE/INVITE USERS TO A CHANNEL
+  // - if user exists just put them in the channel
+  // - if user doesnt exist, create and put them in the channel
+
+
+// GROUP ADMIN MAKE USER A GROUP ADMIN OF THE GROUP
+
 // ----- deleting ---- //
 app.post('/api/users/delete/', function(req, res) {
   let user_id = req.body.user_id;
@@ -434,6 +442,65 @@ app.post('/api/users/delete/', function(req, res) {
   }
 
   res.send("USER DELETED");
+})
+
+app.post("/api/channels/delete", function(req, res){
+  let channel_id = req.body.channel_id;
+  let channel_object_index;
+
+  // figure out of valid channel_id
+  for (let i = 0; i < channels.length; i ++)
+  {
+    if (channels[i].channel_id = channel_id)
+    {
+      channel_object_index = i;
+      break;
+    }
+  }
+
+  if (channel_object_index == null)
+  {
+    res.send("CHANNEL DOES NOT EXIST");
+  }
+
+  // get the group id from the channel object
+  let group_id = channels[channel_object_index].group_id;
+
+  // find the group object and remove the channel from it
+  for (let i = 0; i < groups.length; i ++)
+  {
+    if (groups[i].group_id == group_id)
+    {
+      // find the channel id index
+      for (let j = 0; j < groups[i].channel_ids.length; j ++)
+      {
+        if (groups[i].channel_ids[j] == channel_id)
+        {
+          // remove the channel id from the group
+          groups[i].channel_ids.splice(j, 1);
+        }
+      }
+    }
+  }
+
+  // write changes to file
+  fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
+  // write channels to file
+  fs.writeFile(channels_file, JSON.stringify(channels), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
+  res.send("CHANNEL DELETED");
+
+
+
 })
 
 
