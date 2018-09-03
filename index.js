@@ -9,6 +9,13 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 app.use(express.static(__dirname + "/front-end/dist/front-end/"));
 
+var cors = require('cors');
+var corsOptions = {
+    origin: 'http://localhost:4200',
+    optionSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 // socket stuff
 io.on('connection', (socket) => {

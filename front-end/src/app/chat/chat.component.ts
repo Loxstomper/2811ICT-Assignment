@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SocketService } from '../socket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -14,12 +15,14 @@ export class ChatComponent implements OnInit {
     message;
     connection;
 
-  constructor(private sockServ: SocketService) { }
+  constructor(private router: Router, private sockServ: SocketService) { }
 
   ngOnInit() {
       if (!localStorage.getItem('username'))
       {
         console.log("not a valid login");
+        this.router.navigateByUrl("/home");
+
       }
       else
       {
