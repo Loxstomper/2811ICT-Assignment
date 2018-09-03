@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 
 export class AppComponent {
   title = 'front-end';
+  logged_in: number = 0;
 
   constructor(private router: Router, socketService: SocketService) {}
 
@@ -17,6 +18,7 @@ export class AppComponent {
   {
     if (localStorage.getItem("username") != null)
     {
+      this.logged_in = 1;
       this.router.navigateByUrl("/chat");
     }
     else

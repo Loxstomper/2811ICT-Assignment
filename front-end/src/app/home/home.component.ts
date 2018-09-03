@@ -27,12 +27,24 @@ export class HomeComponent implements OnInit {
 
   }
 
+  admin_check()
+  {
+    this.http.post("http://localhost:3000/api/groups/is_admin", {username:this.username}).subscribe(
+      res=>{
+        // user does not need to know if its a new account
+        console.log(res);
+      }
+    )
+
+  }
+
   Login(event)
   {
     event.preventDefault();
 
     localStorage.setItem('username', this.username);
     this.create_user();
+    this.admin_check();
     this.router.navigateByUrl('chat');
   }
 

@@ -3,8 +3,10 @@
   <h1> SomeChat.io </h1>
   <a routerLink="/home">Home </a>
   <a routerLink="/chat">Chat </a>
-  <a routerLink="/logout"> Logout</a>
-  <a routerLink="/admin"> Admin</a>
   <a routerLink="/profile"> Profile </a>
+  <a routerLink="/admin"> Admin</a>
+  <!-- <div *ngIf="logged_in == 1"> -->
+    <a routerLink="/logout"> Logout</a>
+  <!-- </div> -->
 </nav>
 <router-outlet></router-outlet>

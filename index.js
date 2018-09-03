@@ -141,7 +141,7 @@ app.get('/api/super_admins/:id', function(req, res) {
 
 app.get('/api/groups', function(req, res) {
   res.setHeader("Content-Type", "application/json");
-  res.send(JSON.stringify({success:"true"}));
+  res.send(JSON.stringify({success:"true", value:groups}));
 })
 
 app.get('/api/groups/:id', function(req, res) {
@@ -158,6 +158,72 @@ app.get('/api/groups/:id', function(req, res) {
   }
 
   res.send(JSON.stringify({success:"false", error:"group does not exist"}));
+})
+
+app.get("/api/groups_and_channels_from_username", function(req, res){
+  res.setHeader("Content-Type", "application/json");
+  let username = req.body.username;
+  let result = {values:[]};
+
+  // {[group: [channel, channel]], [group:]}
+
+  // need to find out what groups the user is in
+  // need to find out what channels in those groups the use is in
+
+  // find the user object
+  for (let i = 0; i < users.length; i ++)
+  {
+    if (users[i].username == username)
+    {
+      let user_id = users[i].user_id;
+      // found the user object now iterate over the groups
+      for (let j = 0; j < users[i].group_ids.length; j ++)
+      {
+        // find the acctual group objects
+        for (let k = 0; k < groups.length; k ++)
+        {
+          if (groups[k].group_id == users[i].group_ids[j])
+          {
+            let group_name = groups[k].group_name;
+            let group_json = {group_name:group_name, channels:[]}
+            // add to JSON here
+
+            // now iterate over the channels in the group
+            for (let l = 0; l < groups[k].channel_ids.length; l ++)
+            {
+              // find the actual channel object
+              for (let m = 0; m < channels.length; m ++)
+              {
+                if (channels[m].channel_id == groups[k].channel_ids[l])
+                {
+                  // found the actual channel object
+                  // now need to see if the user is in that channel
+                  for (let n = 0; n < channels[m].user_ids.length; n ++)
+                  {
+                    if (channels[m].user_ids[n] == user_id)
+                    {
+                      // the user is in this channel add to the json
+                      console.log(channels[m].channel_name);
+                      group_json['group_name'].push(channels[m].channel_name);
+                    }
+                  }
+
+                }
+              }
+
+            }
+
+          }
+          result['values'].push(group_json);
+        }
+
+          continue;
+        }
+      }
+      break;
+    }
+    console.log(result);    
+    res.send(JSON.stringify({success:"true", value:result}));
 })
 
 app.get('/api/channels', function(req, res) {
@@ -183,6 +249,47 @@ app.get('/api/channels/:id', function(req, res) {
 })
 
 // ----------- POST METHODS ----------------- //
+app.post("./api/groups/is_admin", function(req, res){
+  res.setHeader("Content-Type", "application/json");
+  let username = req.body.username;
+  let user_id;
+
+  // find the actual user object
+  for (let i = 0; i < users.length; i ++)
+  {
+    // found the user object
+    if (users[i].username == username)
+    {
+      // iterate over groups
+      for (let j = 0; j < users[i].group_ids.length; j ++)
+      {
+        // find the group object
+        for (let k = 0; k < groups.length; k ++)
+        {
+          // found the group object
+          if (groups[k].group_id == users[i].group_ids[j])
+          {
+            // now check if the user in admins
+            for (let l = 0; l < groups[k].admin_ids.length; l ++)
+            {
+              for (let m = 0; m < groups[k].admin_ids.length; m ++)
+              {
+                if (groups[k].admin_ids[m] == user_id)
+                {
+                  res.send(JSON.stringify({success:"true"}));
+                }
+              }
+            }
+
+          }
+        }
+      }
+    }
+  }
+
+  res.send(JSON.stringify({success:"false"}));
+
+})
 
 
 
