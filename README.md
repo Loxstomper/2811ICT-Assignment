@@ -133,7 +133,7 @@ POST: /api/groups/delete
 
   * Models are used for 2 way bindings between the components html and the components typescript
 
-### Isuees / Notes
+### Isues / Notes
 
 Some of the API endpoints are broken, I thought it would be good to have optional arguments for example "/api/groups/:id" however that makes the following route invalid "/api/groups/foo/bar". I have implemented all the endpoints its just they are not all accessible, but you will see them if you look at the index.js file.
 
