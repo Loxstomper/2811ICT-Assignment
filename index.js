@@ -84,10 +84,20 @@ app.get('/api/users', function(req, res) {
 
 app.get('/api/users/:id', function(req, res) {
   const req_user_id = req.params['id'];
+  is_username = 0;
+
+  if (isNaN(req_user_id))
+  {
+    is_username = 1;
+  }
 
   for (var i = 0; i < users.length; i ++)
   {
-    if (users[i].user_id == req_user_id)
+    if (!is_username && users[i].user_id == req_user_id)
+    {
+      res.send(users[i]);
+    }
+    else (users[i].username == req_user_id)
     {
       res.send(users[i]);
     }
