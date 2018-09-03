@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SocketService } from './socket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,19 @@ import { SocketService } from './socket.service';
 export class AppComponent {
   title = 'front-end';
 
-  constructor(socketService: SocketService) {}
+  constructor(private router: Router, socketService: SocketService) {}
+
+  ngOnInit()
+  {
+    if (localStorage.getItem("username") != null)
+    {
+      this.router.navigateByUrl("/chat");
+    }
+    else
+    {
+      this.router.navigateByUrl("/home");
+    }
+
+  }
 
 }
