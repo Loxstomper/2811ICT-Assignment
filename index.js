@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var fs = require('fs');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
@@ -28,9 +29,18 @@ io.on('connection', (socket) => {
     });
 });
 
+// data structures files location
+var user_file         = __dirname + "/data/users.json";
+var super_admins_file = __dirname + "/data/super_admins.json";
+var groups_file       = __dirname + "/data/groups_file.json";
+var channels_file     = __dirname + "/data/channels_file.json";
+
+// load these in json serialize
+
+// data structures
 var users = [
-  {user_id: 0, username: "super", group_ids:[0]},
-  {user_id: 1, username: "bob", group_ids:[0]}
+  {user_id: 0, username: "super", email:"", group_ids:[0]},
+  {user_id: 1, username: "bob", email:"bob@cat.com", group_ids:[0]}
 ]
 
 var super_admins = [
@@ -38,13 +48,12 @@ var super_admins = [
 ]
 
 var groups = [
-  {group_id: 0, name:"first group", channel_ids:[0, 1], admin_ids:[0, 1], user_ids:[0, 1]},
-  {group_id: 1, name:"second group", channel_ids:[2], admin_ids:[0, 1], user_ids:[0, 1]}
+  {group_id: 0, name:"first group", channel_ids:[1], admin_ids:[0, 1], user_ids:[0, 1]},
+  {group_id: 1, name:"second group", channel_ids:[], admin_ids:[0, 1], user_ids:[0, 1]}
 ]
 
 var channels = [
   {channel_id: 0, name:"first channel", group_id:0, user_ids:[1]},
-  {channel_id: 1, name:"MEMES", group_id:1, user_ids:[1]}
 ]
 // routes
 app.get('/test', function(req, res) {
@@ -132,6 +141,7 @@ app.post("/api/users/create", function(req, res)
   // get the username
   let username = req.body.username;
   let super_user = req.body.super_admin;
+  let email_addr = req.body.email;
   let new_id = 0;
 
   // check if the username is not already in the system
@@ -152,9 +162,15 @@ app.post("/api/users/create", function(req, res)
   new_id ++;
 
   // username is not present
-  let new_user = {user_id: new_id, username:username, group_ids:[]};
+  let new_user = {user_id: new_id, username:username, email:email_addr, group_ids:[]};
   // adds to the user
   users.push(new_user);
+
+  fs.writeFile(user_file, JSON.stringify(users), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
 
   // now lets see if they should be a super user
   if (super_user)
@@ -172,12 +188,90 @@ app.post("/api/users/create", function(req, res)
     sa_id ++;
     let new_super = {super_id: sa_id, user_id: new_id};
     super_admins.push(new_super);
+
+
+    fs.writeFile(super_admins_file, JSON.stringify(super_admins), function(err) {
+      if (err) {
+          console.log(err);
+      }
+    });
   }
 
   res.send("USER CREATED");
 })
 
+app.post("/api/groups/create", function(req, res){
+  let group_name = req.body.group_name;
+  let new_id = 0;
+  //basing this of id, so there can be duplicate group names
+  for (let i = 0; i < groups.length; i ++)
+  {
+    if (groups[i].group_id > new_id)
+    {
+      new_id = groups[i].group_id;
+    }
+  }
 
+  let new_group = {group_id:new_id, name:group_name, channel_ids:[], admin_ids:[], user_ids:[]};
+  groups.push(new_group);
+
+  res.send("CREATED GROUP");
+})
+
+app.post("/api/channels/create", function(req, res){
+  let group_name = req.body.group_name;
+  let group_id = 0;
+  let group_exists = 0;
+  let channel_name = req.body.channel_name;
+  let new_id = 0;
+
+  //basing this of id, so there can be duplicate group names
+  for (let i = 0; i < channels.length; i ++)
+  {
+    if (channels[i].channel_id > new_id)
+    {
+      new_id = channels[i].channel_id;
+    }
+  }
+
+  // now got to figure out what the group id is based of the name given
+  for (let i = 0; i < groups.length; i ++)
+  {
+    if (groups[i].name == group_name)
+    {
+      group_id = groups[i].group_id;
+      group_exists = 1;
+    }
+  }
+
+  if (!group_exists)
+  {
+    res.send("GROUP DOES NOT EXIST");
+  }
+
+  new_id ++;
+  let new_channel = {channel_id:new_id, name:channel_name, group_id:group_id, user_ids:[]};
+  channels.push(new_channel);
+
+  console.log(channels);
+
+  // also need to update the channel_ids in the group
+  groups[group_id].channel_ids.push(new_id);
+
+  fs.writeFile(channels_file, JSON.stringify(channels), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
+  fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
+  res.send("CREATED CHANNEL");
+})
 
 
 http.listen(3000);

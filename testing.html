@@ -4,10 +4,13 @@
 
 <body>
 
-<h1> create users </h1>
+<h1> Users </h1>
+<h2> create users </h2>
 
 <form action="/api/users/create", method="post">
     Username: <input type="text" name="username">
+    <br>
+    Email: <input type="text" name="email">
     <br>
     Super Admin: <input type="checkbox" name="super_admin">
     <br>
@@ -15,6 +18,25 @@
 </form>
 
 
+<h1> Group </h1>
+
+<h2> Create groups </h2>
+<form action="/api/groups/create", method="post">
+    Name: <input type="text" name="group_name">
+    <br>
+    <input type="submit" value="submit">
+</form>
+
+<h1> Channels </h1>
+
+<h2> Create channels </h2>
+<form action="/api/channels/create", method="post">
+    Channel Name: <input type="text" name="channel_name">
+    <br>
+    Group Name: <input type="text" name="group_name">
+    <br>
+    <input type="submit" value="submit">
+</form>
 
 
 </body>
