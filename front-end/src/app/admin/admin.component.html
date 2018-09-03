@@ -31,14 +31,17 @@
             <br>
             <input [(ngModel)]="email" type="email" placeholder='someone@example.com'>
             <br>
-            <input [(ngModel)]="super_admin" type="checkbox">
-            <br>
+
+            <div *ngIf="viewer_is_super_admin">>
+                <input [(ngModel)]="super_admin" type="checkbox">
+                <br>
+            </div>
             <button type="submit">Create</button>
         </form>
     </div>
 
     <h4> Delete users </h4>
-    <!-- <div id="form">
+    <div id="form">
         <form (submit)="delete_user($event)" ngNoForm>
             <select>
                 <option *ngFor="let user of users" [value]="user.user_id">
@@ -46,8 +49,8 @@
                 </option>
             </select>
             <button type="submit">Delete</button>
-        </form> -->
-    <!-- </div> -->
+        </form> 
+    </div>
 </div>
 
 <h3> Groups </h3>
