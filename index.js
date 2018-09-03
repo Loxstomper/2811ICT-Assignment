@@ -498,10 +498,73 @@ app.post("/api/channels/delete", function(req, res){
   });
 
   res.send("CHANNEL DELETED");
+})
+
+app.post("/api/groups/delete", function(req, res){
+  let group_id = req.body.group_id;
+  let group_object;
+  let group_object_index;
+
+  // check it is a real group
+  for (let i = 0; i < groups.length; i ++)
+  {
+    if (groups[i].group_id == group_id)
+    {
+      group_object_index = i;
+      break;
+    }
+  }
+
+  if (group_object_index == null)
+  {
+    res.send("GROUP DOES NOT EXIST");
+  }
 
 
+  group_object = groups[group_object_index];
+
+  // remove the group
+  groups.splice(group_object_index, 1);
+
+  // have to delete all the channels in the group
+  for (let i = 0; i < group_object.channel_ids.length; i ++)
+  {
+    // find the actual channel object
+    for (let j = 0; j < channels.length; j ++)
+    {
+      if (group_object.channel_ids[i] == channels[j].channel_id)
+      {
+        // remove the channel
+        channels.splice(j, 1);
+      }
+    }
+  }
+  // have to update the group_ids in the user objects too
+  for (let i = 0; i < group_object.user_ids.length; i ++)
+  {
+    // find the actual user object
+    for (let j = 0; j < users.length; j ++)
+    {
+      if (users[j].user_id == group_object.user_ids[i])
+      {
+        // now need to find the group id in the user and remove
+        for (let k = 0; k < users[j].group_ids.length; k ++)
+        {
+          if (users[j].group_ids[k] == group_id)
+          {
+            // remove the group id from the users group id
+            users[j].group_ids.splice(k, 1);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  res.send("GROUP DELETED");
 
 })
+
 
 
 
