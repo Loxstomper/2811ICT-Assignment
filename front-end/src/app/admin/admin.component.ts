@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin',
@@ -10,6 +11,8 @@ import { Router } from '@angular/router';
 export class AdminComponent implements OnInit {
 
     username: string;
+    email: string;
+    super_admin: number;
     users;
 
   constructor(private router: Router, private http: HttpClient) { }
@@ -19,6 +22,13 @@ export class AdminComponent implements OnInit {
     this.http.get('http://localhost:3000/api/users').subscribe(data => {
       this.users = data;
     })
+  }
+
+  create_user(event)
+  {
+    event.preventDefault();
+
+    console.log(this.username, this.email, this.super_admin);
   }
 
   ngOnInit() {

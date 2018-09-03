@@ -1,23 +1,42 @@
 
 <!-- <h1> HELLO {{username}} </h1> -->
 
-<h3> Users </h3>
+<div id="users">
+    <h3> Users </h3>
 
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Group IDs</th>
-    <tr>
 
-    <tr *ngFor="let user of users">
-        <td> {{ user.user_id }} </td>
-        <td> {{ user.username }} </td>
-        <td> {{ user.email }} </td>
-        <td> {{ user.group_ids }} </td>
-    </tr>
-</table>
+    <div id="table">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Group IDs</th>
+            <tr>
+
+            <tr *ngFor="let user of users">
+                <td> {{ user.user_id }} </td>
+                <td> {{ user.username }} </td>
+                <td> {{ user.email }} </td>
+                <td> {{ user.group_ids }} </td>
+            </tr>
+        </table>
+    </div>
+
+    <br><br><br>
+    <div id="form">
+        <form (submit)="create_user($event)" ngNoForm>
+            <input ng-model="username" type="text" placeholder='username'>
+            <br>
+            <input ng-model="email" type="email" placeholder='someone@example.com'>
+            <br>
+            <input ng-model="super_admin" type="checkbox">
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+</div>
 
 <h3> Groups </h3>
 
