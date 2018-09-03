@@ -35,26 +35,41 @@ var super_admins_file = __dirname + "/data/super_admins.json";
 var groups_file       = __dirname + "/data/groups_file.json";
 var channels_file     = __dirname + "/data/channels_file.json";
 
-// load these in json serialize
-
 // data structures
-var users = [
-  {user_id: 0, username: "super", email:"", group_ids:[0]},
-  {user_id: 1, username: "bob", email:"bob@cat.com", group_ids:[0]}
-]
+var users;
+var super_admins;
+var groups;
+var channels;
 
-var super_admins = [
-  {super_id: 0, user_id: 0}
-]
+// load these in json serialize
+fs.readFile(user_file, function(err, data){
+  if (err){
+    throw err;
+  }
+  users = JSON.parse(data);
+})
 
-var groups = [
-  {group_id: 0, name:"first group", channel_ids:[1], admin_ids:[0, 1], user_ids:[0, 1]},
-  {group_id: 1, name:"second group", channel_ids:[], admin_ids:[0, 1], user_ids:[0, 1]}
-]
+fs.readFile(super_admins_file, function(err, data){
+  if (err){
+    throw err;
+  }
+  super_admins = JSON.parse(data);
+})
 
-var channels = [
-  {channel_id: 0, name:"first channel", group_id:0, user_ids:[1]},
-]
+fs.readFile(groups_file, function(err, data){
+  if (err){
+    throw err;
+  }
+  groups = JSON.parse(data);
+})
+
+fs.readFile(channels_file, function(err, data){
+  if (err){
+    throw err;
+  }
+  channels = JSON.parse(data);
+})
+
 // routes
 app.get('/api/test', function(req, res) {
   res.sendFile("./testing.html", {root: __dirname});
@@ -373,24 +388,18 @@ app.post("/api/channels/invite", function(req, res){
 
 
   // write groups to file
-  if (groups_modified)
-  {
-    fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
-      if (err) {
-          console.log(err);
-      }
-    });
-  }
+  fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
 
   // write channels to file
-  if (channels_modified)
-  {
-    fs.writeFile(channels_file, JSON.stringify(channels), function(err) {
-      if (err) {
-          console.log(err);
-      }
-    });
-  }
+  fs.writeFile(channels_file, JSON.stringify(channels), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
 
   res.send("ADDED USER TO CHANNEL");
 })
@@ -610,6 +619,67 @@ app.post("/api/channels/delete", function(req, res){
 
   res.send("CHANNEL DELETED");
 })
+
+app.post("/api/channels/delete_user", function(req, res){
+  let channel_id = req.body.channel_id;
+  let username = req.body.username;
+  let channel_object_index;
+  let user_object_index;
+
+  // figure out of valid channel_id
+  for (let i = 0; i < channels.length; i ++)
+  {
+    if (channels[i].channel_id = channel_id)
+    {
+      channel_object_index = i;
+      break;
+    }
+  }
+
+  if (channel_object_index == null)
+  {
+    res.send("CHANNEL DOES NOT EXIST");
+  }
+
+
+  // write changes to file
+  fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
+  // write channels to file
+  fs.writeFile(channels_file, JSON.stringify(channels), function(err) {
+    if (err) {
+        console.log(err);
+    }
+  });
+
+  res.send("CHANNEL DELETED");
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.post("/api/groups/delete", function(req, res){
   let group_id = req.body.group_id;
