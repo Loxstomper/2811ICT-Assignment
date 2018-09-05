@@ -63,7 +63,7 @@ export class AdminComponent implements OnInit {
   {
     event.preventDefault();
 
-    if (!this.username || !this.super_admin)
+    if (!this.username || !this.email)
     {
       alert("Please enter a username and email address");
       return;
@@ -79,6 +79,62 @@ export class AdminComponent implements OnInit {
     )
 
     console.log(this.username, this.email, this.super_admin);
+  }
+
+  create_group(event)
+  {
+    event.preventDefault();
+    if (!this.group_name)
+    {
+      alert("Please enter a group name");
+
+    }
+
+    this.http.post("http://localhost:3000/api/groups/create", {group_name:this.group_name}).subscribe(
+      res=>{
+        if (res['success'] != "true")
+        {
+            alert(res['error']);
+        }
+      }
+    )
+  }
+
+  delete_group(id)
+  {
+    if (!id)
+    {
+      alert("Please enter a group id");
+
+    }
+
+    this.http.post("http://localhost:3000/api/groups/delete", {group_id:id}).subscribe(
+      res=>{
+        if (res['success'] != "true")
+        {
+            alert(res['error']);
+        }
+      }
+    )
+  }
+
+  make_group_admin(event)
+  {
+    event.preventDefault();
+  }
+
+  invite_user_to_group(event)
+  {
+    event.preventDefault();
+
+    this.http.post("http://localhost:3000/api/groups/invite", {username:1, channel_id:1}).subscribe(
+      res=>{
+        if (res['success'] != "true")
+        {
+            alert(res['error']);
+        }
+      }
+    )
   }
 
   get_super_admin_status()
@@ -168,8 +224,8 @@ export class AdminComponent implements OnInit {
 
 
     this.get_users();
-    // this.get_groups();
-    // this.get_channels();
+    this.get_groups();
+    this.get_channels();
     // this.get_super_admins();
   }
 }
