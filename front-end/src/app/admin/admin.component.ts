@@ -59,12 +59,27 @@ export class AdminComponent implements OnInit {
     })
   }
 
+  create_channel(event)
+  {
+    event.preventDefault();
+    console.log("GROUP NAME: " + this.group_name + " CHANNEL NAME: " + this.channel_name);
+    this.http.post("http://localhost:3000/api/channels/create", {group_name:this.group_name, channel_name:this.channel_name}).subscribe(
+      res=>{
+        if(res['success'] != "true")
+        {
+          alert(res['error']);
+        }
+      }
+    )
+  }
+
   create_user(event)
   {
     event.preventDefault();
 
     if (!this.username || !this.email)
     {
+      console.log("USER: " + this.username + " email: " + this.email);
       alert("Please enter a username and email address");
       return;
     }
@@ -121,14 +136,35 @@ export class AdminComponent implements OnInit {
   make_group_admin(event)
   {
     event.preventDefault();
+
+    this.http.post("http://localhost:3000/api/groups/make_admin", {username:this.username, group_id:this.group_id}).subscribe(
+      res=>{
+        console.log(res);
+        if (res['success'] != "true")
+        {
+            alert(res['error']);
+        }
+      }
+    )
+
+
+
   }
 
-  invite_user_to_group(event)
+  invite_user_to_channel(event)
   {
     event.preventDefault();
 
-    this.http.post("http://localhost:3000/api/groups/invite", {username:1, channel_id:1}).subscribe(
+    if (!this.username || !this.channel_id)
+    {
+      alert("Please enter a valid username and channel id");
+      return;
+    }
+
+    this.http.post("http://localhost:3000/api/channels/invite", {username:this.username, channel_id:this.channel_id}).subscribe(
       res=>{
+        console.log("ADDED USER TO CHANNEL");
+        console.log(res);
         if (res['success'] != "true")
         {
             alert(res['error']);
@@ -184,6 +220,21 @@ export class AdminComponent implements OnInit {
       }
     )
 
+  }
+
+  make_super_admin(id)
+  {
+
+  }
+
+  delete_channel(id)
+  {
+    this.http.post("http://localhost:3000/api/channels/delete/", {channel_id:id}).subscribe(
+      res=>{
+        console.log(res);
+
+      }
+    )
   }
 
   // I MADE THIS.VIEWER.SUPER_USER 1

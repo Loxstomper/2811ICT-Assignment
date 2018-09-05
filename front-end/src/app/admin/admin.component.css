@@ -4,7 +4,7 @@
 }
 
 #menu {
-    background-color: #2c2f33;
+    background-color: #d6d6d6
 }
 
 #users {
@@ -21,6 +21,12 @@
     border-bottom: 1px solid white;
 }
 
+#channels {
+    padding: 20px;
+    margin: auto;
+    width: 50%;
+    border-bottom: 1px solid white;
+}
 
 #table {
     border: 1px solid black;

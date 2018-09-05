@@ -40,12 +40,15 @@
             </form>
         </div>
 
+        <br><br><br>
         <h4> Invite users </h4>
         <div id="form">
-            <form (submit)="create_user($event)" ngNoForm>
+            <form (submit)="invite_user_to_channel($event)" ngNoForm>
                 Username  :<input [(ngModel)]="username" type="text" placeholder='username'>
-                Channel ID:<input type="number">
-                <button type="submit">Create</button>
+                <br>
+                Channel ID:<input [(ngModel)]="channel_id" type="number">
+                <br>
+                <button type="submit">Invite</button>
             </form>
         </div>
     </div>
@@ -69,6 +72,7 @@
             </table>
         </div>
 
+        <br><br><br>
         <h4> Create group </h4>
         <form (submit)="create_group($event)" ngNoForm>
             <input [(ngModel)]="group_name" type="text" placeholder='group name'>
@@ -76,37 +80,40 @@
             <button type="submit">Create</button>
         </form>
 
+        <br><br><br>
         <h4> Make group admin </h4>
         <form (submit)="make_group_admin($event)" ngNoForm>
-            Group ID :<input type="number">
+            Group ID :<input [(ngModel)]="group_id" type="number">
             <br>
             Username:<input [(ngModel)]="username" type="text" placeholder='username'>
             <br>
             <button type="submit">Create Admin</button>
         </form>
     </div>
-<!-- 
-<h3> Channels </h3>
 
-    <h4> Create Channel </h4>
-    <form (submit)="create_channel($event)" ngNoForm>
-        <input [(ngModel)]="channel_name" type="text" placeholder='channel name'>
-        <br>
-        <button type="submit">Create</button>
-    </form>
+    <div id="channels">
+        <h3> Channels </h3>
+        <div id="table">
+            <table>
+                <tr>
+                    <th> ID </th>
+                    <th> Name </th>
+                    <th> Group </th>
+                </tr>
+                <tr *ngFor="let channel of channels">
+                    <td> {{ channel.channel_id}} </td>
+                    <td> {{ channel.name}} </td>
+                    <td> {{ channel.group_id }} </td>
+                    <td> <button (click)="delete_channel(channel.channel_id)">delete</button></td>
+                </tr>
+            </table>
 
-    <h4> Delete group</h4>
-    <form (submit)="delete_channel($event)" ngNoForm>
-        <input [(ngModel)]="channel_id" type="number">
-        <br>
-        <button type="submit">Delete</button>
-    </form>
-
-    <h4> Invite user </h4>
-    <form (submit="channel_invite_user($event)" ngNoForm>
-        <input [(ngModel)]="channel_id" type="number">
-        <br>
-        <input [(ngModel)]="username" type="text" placeholder='username'>
-        <br>
-        <button type="submit">Invite user</button>
-    </form> -->
+        <br><br><br>
+        <h4> Create Channel </h4>
+        <form (submit)="create_channel($event)" ngNoForm>
+            <input [(ngModel)]="channel_name" type="text" placeholder='channel name'>
+            <input [(ngModel)]="group_name" type="text" placeholder='group name'>
+            <br>
+            <button type="submit">Create</button>
+        </form>
+    </div>

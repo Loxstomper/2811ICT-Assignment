@@ -316,6 +316,62 @@ app.get('/api/channels/:id', function(req, res) {
 })
 
 // ----------- POST METHODS ----------------- //
+
+app.post("./api/groups/make_admin", function(req, res){
+  res.setHeader("Content-Type", "application/json");
+  let username = req.body.username;
+  let user_id;
+  let group_id = req.body.group_id;
+  let group_object_index = -1;
+
+  // find the actual user object
+  for (let i = 0; i < users.length; i ++)
+  {
+    // found the user object
+    if (users[i].username == username)
+    {
+      user_id = users[i].user_id;
+      break;
+    }
+  }
+
+  if (user_id == null)
+  {
+    res.send(JSON.stringify({success:"false", error:"user does not exist"}));
+    return;
+  }
+
+  // find the actual group object
+  for (let i = 0; i < groups.length; i ++)
+  {
+    // found the group object
+    if (groups[i].group_id == group_id)
+    {
+      group_object_index = i;
+      // check if the user is not already a group admin
+      for (let j = 0; j < group[i].admin_ids.length; j ++)
+      {
+        if (group[i].admin_ids[j] == user_id)
+        {
+          res.send(JSON.stringify({success:"false", error:"use is already a group admin"}));
+          return;
+        }
+      }
+    }
+  }
+
+  if (group_id_exits < 0)
+  {
+    res.send(JSON.stringify({success:"false", error:"group not found"}));
+    return;
+  }
+
+  groups[group_object_index].admin_ids.push(user_id);
+  res.send(JSON.stringify({success:"true"}));
+
+
+})
+
 app.post("./api/groups/is_admin", function(req, res){
   res.setHeader("Content-Type", "application/json");
   let username = req.body.username;
@@ -461,6 +517,7 @@ app.post("/api/channels/create", function(req, res){
   res.setHeader("Content-Type", "application/json");
   let group_name = req.body.group_name;
   let group_id = 0;
+  let group_object_index = 0;
   let group_exists = 0;
   let channel_name = req.body.channel_name;
   let new_id = 0;
@@ -480,6 +537,7 @@ app.post("/api/channels/create", function(req, res){
     if (groups[i].name == group_name)
     {
       group_id = groups[i].group_id;
+      group_object_index = i;
       group_exists = 1;
     }
   }
@@ -495,7 +553,8 @@ app.post("/api/channels/create", function(req, res){
   channels.push(new_channel);
 
   // also need to update the channel_ids in the group
-  groups[group_id].channel_ids.push(new_id);
+  console.log("IS IT HERE? THIS IS THE VALUE OF groups[group_id]: " + groups[group_id])
+  groups[group_object_index].channel_ids.push(new_id);
 
   fs.writeFile(channels_file, JSON.stringify(channels), function(err) {
     if (err) {
@@ -574,6 +633,17 @@ app.post("/api/channels/invite", function(req, res){
     if (channels[i].channel_id == channel_id)
     {
       // add the user id to the channel
+
+      // check that the user is not already in the channel
+      for (let j = 0; j < channels[i].user_ids.length; j ++)
+      {
+        if (channels[i].user_ids[j] == user_id)
+        {
+          res.send(JSON.stringify({success:"false", error:"user already in channel"}));
+          return;
+        }
+      }
+
       channels[i].user_ids.push(user_id);
       group_id = channels[i].group_id;
 
@@ -587,6 +657,15 @@ app.post("/api/channels/invite", function(req, res){
     if (groups[i].group_id == group_id)
     {
       // add the user to the group
+      // check if the user already in the group
+      for (let j = 0; j < groups[i].user_ids.length; j ++)
+      {
+        if (groups[i].user_ids[j] == user_id)
+        {
+          res.send(JSON.stringify({success:"true"}));
+          return;
+        }
+      }
       groups[i].user_ids.push(user_id);
     } 
   }
@@ -823,6 +902,10 @@ app.post("/api/channels/delete", function(req, res){
       }
     }
   }
+
+  // delete the channel
+  // doesnt look like it works when it is the last index
+  channels.splice(channel_object_index, 1);
 
   // write changes to file
   fs.writeFile(groups_file, JSON.stringify(groups), function(err) {
