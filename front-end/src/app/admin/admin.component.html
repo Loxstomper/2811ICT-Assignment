@@ -1,59 +1,51 @@
 
-<h1> Admin Page: {{username}} </h1>
+<h1> Admin Page: {{viewer_username}} </h1>
+ 
+<div id="menu" class="centre">
+    <div id="users">
 
-<div id="users">
-    <h3> Users </h3>
+        <h3> Users </h3>
 
 
-    <div id="table">
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Group IDs</th>
-            <tr>
+        <div id="table">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Group IDs</th>
+                <tr>
 
-            <tr *ngFor="let user of users">
-                <td> {{ user.user_id }} </td>
-                <td> {{ user.username }} </td>
-                <td> {{ user.email }} </td>
-                <td> {{ user.group_ids }} </td>
-            </tr>
-        </table>
-    </div>
+                <tr *ngFor="let user of users">
+                    <td> {{ user.user_id }} </td>
+                    <td> {{ user.username }} </td>
+                    <td> {{ user.email }} </td>
+                    <td> {{ user.group_ids }} </td>
+                    <td *ngIf="viewer_is_super_admin"> <button (click)="delete_user(user.user_id)">delete</button></td>
+                    <td *ngIf="viewer_is_super_admin"> <button (click)="make_super_admin(user.user_id)">super</button></td>
+                </tr>
+            </table>
+        </div>
 
-    <br><br><br>
-    <h4> Create users </h4>
-    <div id="form">
-        <form (submit)="create_user($event)" ngNoForm>
-            <input [(ngModel)]="username" type="text" placeholder='username'>
-            <br>
-            <input [(ngModel)]="email" type="email" placeholder='someone@example.com'>
-            <br>
+        <br><br><br>
+        <h4> Create users </h4>
+        <div id="form">
+            <form (submit)="create_user($event)" ngNoForm>
+                <input [(ngModel)]="username" type="text" placeholder='username'>
+                <input [(ngModel)]="email" type="email" placeholder='someone@example.com'>
 
-            <div *ngIf="viewer_is_super_admin">>
-                <input [(ngModel)]="super_admin" type="checkbox">
-                <br>
-            </div>
-            <button type="submit">Create</button>
-        </form>
-    </div>
-
-    <h4> Delete users </h4>
-    <div id="form">
-        <form (submit)="delete_user($event)" ngNoForm>
-            <select>
-                <option *ngFor="let user of users" [value]="user.user_id">
-                    {{ user.username }}
-                </option>
-            </select>
-            <button type="submit">Delete</button>
-        </form> 
+                <div *ngIf="viewer_is_super_admin">>
+                    <p> super </p>
+                    <input [(ngModel)]="super_admin" type="checkbox">
+                    <br>
+                </div>
+                <button type="submit">Create</button>
+            </form>
+        </div>
     </div>
 </div>
 
-<h3> Groups </h3>
+<!-- <h3> Groups </h3> -->
 
     <h4> Create group </h4>
     <form (submit)="create_group($event)" ngNoForm>
@@ -77,7 +69,7 @@
         <br>
         <button type="submit">Create Admin</button>
     </form>
-
+<!-- 
 <h3> Channels </h3>
 
     <h4> Create Channel </h4>
@@ -101,4 +93,4 @@
         <input [(ngModel)]="username" type="text" placeholder='username'>
         <br>
         <button type="submit">Invite user</button>
-    </form>
+    </form> --> -->

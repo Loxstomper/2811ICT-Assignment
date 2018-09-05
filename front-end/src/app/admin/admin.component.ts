@@ -11,8 +11,8 @@ import { FormsModule } from '@angular/forms';
 export class AdminComponent implements OnInit {
 
     viewer_username: string = "";
-    viewer_is_group_admin: number;
-    viewer_is_super_admin: number;
+    viewer_is_group_admin: number = 0;
+    viewer_is_super_admin: number = 0;
     email: string = "";
     super_admin: number = 0;
     username: string = "";
@@ -63,6 +63,12 @@ export class AdminComponent implements OnInit {
   {
     event.preventDefault();
 
+    if (!this.username || !this.super_admin)
+    {
+      alert("Please enter a username and email address");
+      return;
+    }
+
     this.http.post("http://localhost:3000/api/users/create", {username:this.username, super_admin:this.super_admin, email:this.email}).subscribe(
       res=>{
         if (res['success'] != "true")
@@ -75,6 +81,56 @@ export class AdminComponent implements OnInit {
     console.log(this.username, this.email, this.super_admin);
   }
 
+  get_super_admin_status()
+  {
+    this.http.get("http://localhost:3000/api/super_admins/is_super_admin/" + this.username).subscribe(
+      res=>{
+        console.log("GET SUPER ADMIN STATUS" + res)
+        console.log(res);
+        if (res['value'] == "true")
+        {
+          return 1;
+        }
+        else
+        {
+          return 0;
+        }
+      }
+    )
+  }
+
+  get_group_admin_status()
+  {
+    this.http.get("http://localhost:3000/api/groups/is_admin/" + this.username).subscribe(
+      res=>{
+        console.log("GET GROUP ADMIN STATUS");
+        console.log(res);
+        if (res['value'] == "true")
+        {
+          return 1;
+        }
+        else
+        {
+          return 0;
+        }
+      }
+    )
+  }
+
+  delete_user(id)
+  {
+    console.log("DELETE ID: " + id);
+
+    this.http.post("http://localhost:3000/api/users/delete/", {user_id:id}).subscribe(
+      res=>{
+        console.log(res);
+
+      }
+    )
+
+  }
+
+  // I MADE THIS.VIEWER.SUPER_USER 1
   ngOnInit() {
     this.viewer_username = localStorage.getItem("username");
     console.log(this.viewer_username);
@@ -85,12 +141,35 @@ export class AdminComponent implements OnInit {
       this.router.navigateByUrl('/home');
     }
 
+    this.viewer_is_super_admin = 1;
+
+    // check if the user is a superadmin
+    if (this.get_super_admin_status())
+    {
+      this.viewer_is_super_admin = 1;
+    }
+
+    // check if the user is a superadmin
+    if (this.get_group_admin_status())
+    {
+      this.viewer_is_group_admin = 1;
+    }
+
+    console.log("SUPERADMIN: " + this.viewer_is_super_admin + "GROUP ADMIN: " + this.viewer_is_group_admin);
+
+    // if not a group admin or not a super admin redirect user
+    // if (!this.viewer_is_group_admin || !this.viewer_is_super_admin)
+    // {
+    //   alert("Not a group or super admin")
+    //   this.router.navigateByUrl('/home');
+    // }
+
+
+
 
     this.get_users();
-    this.get_groups();
-    this.get_channels();
-    this.get_super_admins();
-
-    console.log(this.users);
+    // this.get_groups();
+    // this.get_channels();
+    // this.get_super_admins();
   }
 }
