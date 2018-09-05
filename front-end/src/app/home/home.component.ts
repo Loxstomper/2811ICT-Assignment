@@ -17,16 +17,6 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  create_user()
-  {
-    this.http.post("http://localhost:3000/api/users/create", {username:this.username, super_admin:0, email:this.email}).subscribe(
-      res=>{
-        // user does not need to know if its a new account
-      }
-    )
-
-  }
-
   admin_check()
   {
     this.http.post("http://localhost:3000/api/groups/is_admin", {username:this.username}).subscribe(
@@ -42,9 +32,20 @@ export class HomeComponent implements OnInit {
   {
     event.preventDefault();
 
+    // check if user exists
+    this.http.get("http://localhost:3000/api/users/" + this.username).subscribe(
+      res=>{
+        if (res['success'] == "false")
+        {
+          alert("User does not exist");
+          this.router.navigateByUrl('home');
+          return;
+        }
+      }
+    )
+
     localStorage.setItem('username', this.username);
-    this.create_user();
-    this.admin_check();
+    // this.admin_check();
 
     this.router.navigateByUrl('chat');
   }

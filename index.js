@@ -108,7 +108,7 @@ app.get('/api/users/:id', function(req, res) {
       res.send(JSON.stringify({success:"true", value:users[i]}));
       return;
     }
-    else (users[i].username == req_user_id)
+    else if (users[i].username == req_user_id)
     {
       // res.send(users[i]);
       res.send(JSON.stringify({success:"true", value:users[i]}));
@@ -144,13 +144,31 @@ app.get('/api/super_admins/:id', function(req, res) {
 
 app.get('/api/super_admins/is_super_admin/:id', function(req, res) {
   res.setHeader("Content-Type", "application/json");
-  const req_user_id = req.params['id'];
+  const req_username = req.params['id'];
+  let user_id;
 
-  console.log("CHECKING IF: " + req_user_id + " is super")
+  // figure out the users id
+  for (let i = 0; users.length; i++)
+  {
+    if (users[i].username == req_username)
+    {
+      user_id = users[i].user_id;
+      break;
+    }
+  }
+
+  if (user_id == null)
+  {
+    res.send(JSON.stringify({success:"false", error:"user does not exist"}));
+    return;
+  }
+
+
+  console.log("CHECKING IF: " + req_username + " is super")
 
   for (let i = 0; i < super_admins.length; i ++)
   {
-    if (super_admins[i].user_id == req_user_id)
+    if (super_admins[i].user_id == user_id)
     {
       // res.send(super_admins[i]);
       res.send(JSON.stringify({success:"true", value:"true"}));
@@ -185,7 +203,7 @@ app.get('/api/groups/:id', function(req, res) {
 })
 
 // check if the user is at least a group admin in one of the groups
-app.get('/api/groups/is_admin/', function(req, res) {
+app.get('/api/groups/is_admin/:id', function(req, res) {
   res.setHeader("Content-Type", "application/json");
   // this really should be ID
   const req_username = req.params['id'];
@@ -212,7 +230,7 @@ app.get('/api/groups/is_admin/', function(req, res) {
   // go through every group
   for (let i = 0; i < groups.length; i ++)
   {
-    for (let j = 0; j < groups.admin_ids.length; j ++)
+    for (let j = 0; j < groups[i].admin_ids.length; j ++)
     {
       if (groups[i].admin_ids[j] == user_id)
       {

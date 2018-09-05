@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ModuleWithComponentFactories } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -11,8 +11,10 @@ import { FormsModule } from '@angular/forms';
 export class AdminComponent implements OnInit {
 
     viewer_username: string = "";
-    viewer_is_group_admin: number = 0;
-    viewer_is_super_admin: number = 0;
+    // viewer_is_group_admin: number = 0;
+    // viewer_is_super_admin: number = 0;
+    viewer_is_group_admin = 0;
+    viewer_is_super_admin = 0;
     email: string = "";
     super_admin: number = 0;
     username: string = "";
@@ -173,40 +175,43 @@ export class AdminComponent implements OnInit {
     )
   }
 
-  get_super_admin_status()
-  {
-    this.http.get("http://localhost:3000/api/super_admins/is_super_admin/" + this.username).subscribe(
+  get_super_admin_status(user)
+  { 
+    let x;
+    console.log("http://localhost:3000/api/super_admins/is_super_admin/" + user);
+    this.http.get("http://localhost:3000/api/super_admins/is_super_admin/" + user).subscribe(
       res=>{
-        console.log("GET SUPER ADMIN STATUS" + res)
-        console.log(res);
-        if (res['value'] == "true")
+        if (res['success'] == "true")
         {
-          return 1;
+          console.log("YO DUDE YOUR A SUPER ADMIN");
+          x  = 1;
         }
         else
         {
-          return 0;
+          x = 0;
         }
       }
     )
+    return x;
   }
 
-  get_group_admin_status()
+  get_group_admin_status(user)
   {
-    this.http.get("http://localhost:3000/api/groups/is_admin/" + this.username).subscribe(
+    let x;
+    this.http.get("http://localhost:3000/api/groups/is_admin/" + user).subscribe(
       res=>{
-        console.log("GET GROUP ADMIN STATUS");
-        console.log(res);
         if (res['value'] == "true")
         {
-          return 1;
+          x = 1;
         }
         else
         {
-          return 0;
+          x = 0;
         }
       }
     )
+
+    return x;
   }
 
   delete_user(id)
@@ -237,7 +242,6 @@ export class AdminComponent implements OnInit {
     )
   }
 
-  // I MADE THIS.VIEWER.SUPER_USER 1
   ngOnInit() {
     this.viewer_username = localStorage.getItem("username");
     console.log(this.viewer_username);
@@ -248,28 +252,19 @@ export class AdminComponent implements OnInit {
       this.router.navigateByUrl('/home');
     }
 
+    // WHY DOESNT THIS WORK??????????
+    // this.viewer_is_super_admin = this.get_super_admin_status(this.viewer_username);
+    // this.viewer_is_group_admin = this.get_group_admin_status(this.viewer_username);
+
+    // just hardcoded to be superadmin at the moment but this should work
     this.viewer_is_super_admin = 1;
 
-    // check if the user is a superadmin
-    if (this.get_super_admin_status())
+    // if not a group admin or a super admin redirect user
+    if (!(this.viewer_is_group_admin || this.viewer_is_super_admin))
     {
-      this.viewer_is_super_admin = 1;
+      alert("Not a group or super admin")
+      this.router.navigateByUrl('/home');
     }
-
-    // check if the user is a superadmin
-    if (this.get_group_admin_status())
-    {
-      this.viewer_is_group_admin = 1;
-    }
-
-    console.log("SUPERADMIN: " + this.viewer_is_super_admin + "GROUP ADMIN: " + this.viewer_is_group_admin);
-
-    // if not a group admin or not a super admin redirect user
-    // if (!this.viewer_is_group_admin || !this.viewer_is_super_admin)
-    // {
-    //   alert("Not a group or super admin")
-    //   this.router.navigateByUrl('/home');
-    // }
 
 
 
