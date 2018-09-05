@@ -244,6 +244,69 @@ app.get('/api/groups/is_admin/:id', function(req, res) {
   res.send(JSON.stringify({success:"false", value:"false"}));
 })
 
+app.get("/api/groups/from_username/:username", function(req, res){
+  res.setHeader("Content-Type", "application/json");
+  let username = req.params.username;
+  console.log("LOOKUP ON USERNAME: " + username);
+  let user_object_index;
+
+  // find the user object
+  for (let i = 0; i < users.length; i ++)
+  {
+    if (users[i].username == username)
+    {
+      user_object_index = users[i].user_id;
+      break
+    }
+  }
+
+  if (user_object_index == null)
+  {
+    res.send(JSON.stringify({success:"false", error:"user not found"}));
+    return;
+  }
+
+  res.send(JSON.stringify({success:"true", values:users[user_object_index].group_ids}));
+
+})
+
+app.get("/api/channels/from_username/:username", function(req, res){
+  res.setHeader("Content-Type", "application/json");
+  let username = req.params.username;
+  console.log("LOOKUP ON USERNAME: " + username);
+  let user_object_index;
+
+  // find the user object
+  for (let i = 0; i < users.length; i ++)
+  {
+    if (users[i].username == username)
+    {
+      user_object_index = users[i].user_id;
+      break
+    }
+  }
+
+  if (user_object_index == null)
+  {
+    res.send(JSON.stringify({success:"false", error:"user not found"}));
+    return;
+  }
+
+  let user_id = users[user_object_index].user_id;
+  let channel_list = []
+
+  for (let i = 0; i < channels.length; i ++)
+  {
+    for (let j = 0; j < channels[i].user_ids.length; j ++)
+    {
+      channel_list.push(channels[i].channel_id);
+    }
+  }
+
+  res.send(JSON.stringify({success:"true", values:channel_list}));
+
+})
+
 app.post("/api/groups_and_channels_from_username", function(req, res){
   res.setHeader("Content-Type", "application/json");
   let username = req.body.username;

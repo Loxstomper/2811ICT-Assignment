@@ -16,16 +16,30 @@ export class ChatComponent implements OnInit {
     message;
     connection;
     groups;
+    channels;
 
   constructor(private router: Router, private sockServ: SocketService, private http:HttpClient) { }
 
   name: string = "";
 
-  get_groups_and_channels()
+  get_groups_and_channels(username)
   {
-    this.http.post("http://localhost:3000/api/groups_and_channels_from_username/", {username:name}).subscribe(
+    // this.http.post("http://localhost:3000/api/groups_and_channels_from_username/", {username:name}).subscribe(
+    //   res => {
+    //     console.log("USERS STUFF");
+    //     console.log(res);
+    //   }
+    // ) 
+    this.http.get("http://localhost:3000/api/groups/from_username/" + username).subscribe(
       res => {
-        console.log(res);
+        console.log(res['values']);
+        this.groups = res['values'];
+      }
+    ) 
+
+    this.http.get("http://localhost:3000/api/channels/from_username/" + username).subscribe(
+      res => {
+        this.channels = res['values'];
       }
     ) 
   }
@@ -51,8 +65,8 @@ export class ChatComponent implements OnInit {
 
     this.name = localStorage.getItem('username');
     console.log("USERNAME: " + this.name);
-    this.get_groups_and_channels();
-    this.get_groups();
+    this.get_groups_and_channels(this.name);
+    // this.get_groups();
 
 
     this.connection = this.sockServ.getMessages().subscribe(message=>{
