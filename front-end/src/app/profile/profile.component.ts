@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
       this.router.navigateByUrl("/home");
     }
 
-    this.get_user();
+    // this.get_user();
   }
 
 }

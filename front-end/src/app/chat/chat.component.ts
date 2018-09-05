@@ -15,6 +15,7 @@ export class ChatComponent implements OnInit {
     messages=[];
     message;
     connection;
+    groups;
 
   constructor(private router: Router, private sockServ: SocketService, private http:HttpClient) { }
 
@@ -29,19 +30,30 @@ export class ChatComponent implements OnInit {
     ) 
   }
 
-  ngOnInit() {
-      if (!localStorage.getItem('username'))
-      {
-        console.log("not a valid login");
-        this.router.navigateByUrl("/home");
+  get_groups()
+  {
+    this.http.get("http://localhost:3000/api/groups/").subscribe(
+      res => {
+        this.groups = res['value'];
 
+        // console.log(res['value']);
       }
-      else
-      {
-        this.name = localStorage.getItem('username');
-        console.log("USERNAME: " + this.username);
-        this.get_groups_and_channels();
-      }
+    ) 
+  }
+
+  ngOnInit() {
+    if (!localStorage.getItem('username'))
+    {
+      console.log("not a valid login");
+      this.router.navigateByUrl("/home");
+
+    }
+
+    this.name = localStorage.getItem('username');
+    console.log("USERNAME: " + this.name);
+    this.get_groups_and_channels();
+    this.get_groups();
+
 
     this.connection = this.sockServ.getMessages().subscribe(message=>{
         this.messages.push(message);

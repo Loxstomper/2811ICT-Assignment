@@ -106,11 +106,13 @@ app.get('/api/users/:id', function(req, res) {
     if (!is_username && users[i].user_id == req_user_id)
     {
       res.send(JSON.stringify({success:"true", value:users[i]}));
+      return;
     }
     else (users[i].username == req_user_id)
     {
       // res.send(users[i]);
       res.send(JSON.stringify({success:"true", value:users[i]}));
+      return;
     }
   }
 
@@ -133,6 +135,7 @@ app.get('/api/super_admins/:id', function(req, res) {
     {
       // res.send(super_admins[i]);
       res.send(JSON.stringify({success:"yes", value:super_admins[i]}));
+      return;
     }
   }
 
@@ -154,13 +157,14 @@ app.get('/api/groups/:id', function(req, res) {
     {
       // res.send(group_id[i]);
       res.send(JSON.stringify({success:"true", value:groups[i]}));
+      return;
     }
   }
 
   res.send(JSON.stringify({success:"false", error:"group does not exist"}));
 })
 
-app.get("/api/groups_and_channels_from_username", function(req, res){
+app.post("/api/groups_and_channels_from_username", function(req, res){
   res.setHeader("Content-Type", "application/json");
   let username = req.body.username;
   let result = {values:[]};
@@ -242,6 +246,7 @@ app.get('/api/channels/:id', function(req, res) {
     {
       // res.send(channels[i]);
       res.send(JSON.stringify({success:"true", value:challens[i]}));
+      return;
     }
   }
 
@@ -277,6 +282,7 @@ app.post("./api/groups/is_admin", function(req, res){
                 if (groups[k].admin_ids[m] == user_id)
                 {
                   res.send(JSON.stringify({success:"true"}));
+                  return;
                 }
               }
             }
@@ -316,6 +322,7 @@ app.post("/api/users/create", function(req, res)
       console.log("USERNAME ALREADY EXISTS");
       // res.send("USERNAME ALREADY EXISTS");
       res.send(JSON.stringify({success:"false", error:"username already exists"}));
+      return;
     }
   }
 
@@ -374,6 +381,8 @@ app.post("/api/groups/create", function(req, res){
     }
   }
 
+  new_id ++;
+
   let new_group = {group_id:new_id, name:group_name, channel_ids:[], admin_ids:[], user_ids:[]};
   groups.push(new_group);
 
@@ -416,6 +425,7 @@ app.post("/api/channels/create", function(req, res){
   if (!group_exists)
   {
     res.send(JSON.stringify({success:"false", error:"group does not exist"}));
+    return;
   }
 
   new_id ++;
@@ -579,6 +589,7 @@ app.post('/api/users/delete/', function(req, res) {
   if (user_data == null)
   {
     res.send(JSON.stringify({success:"false", error:"user not found"}));
+    return;
   }
 
   console.log("DELETEING USER: " + user_data);
@@ -728,6 +739,7 @@ app.post("/api/channels/delete", function(req, res){
   if (channel_object_index == null)
   {
     res.send(JSON.stringify({success:"false", error:"channel does not exist"}));
+    return;
   }
 
   // get the group id from the channel object
@@ -787,6 +799,7 @@ app.post("/api/channels/delete_user", function(req, res){
   if (channel_object_index == null)
   {
     res.send(JSON.stringify({success:"false", error:"channel does not exist"}));
+    return;
   }
 
 
@@ -807,28 +820,6 @@ app.post("/api/channels/delete_user", function(req, res){
   res.send(JSON.stringify({success:"true"}));
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.post("/api/groups/delete", function(req, res){
   res.setHeader("Content-Type", "application/json");
   let group_id = req.body.group_id;
@@ -848,6 +839,7 @@ app.post("/api/groups/delete", function(req, res){
   if (group_object_index == null)
   {
     res.send(JSON.stringify({success:"false", error:"group does not exist"}));
+    return;
   }
 
 
@@ -893,10 +885,6 @@ app.post("/api/groups/delete", function(req, res){
 
   res.send(JSON.stringify({success: "true"}));
 })
-
-
-
-
 
 http.listen(3000);
 console.log("Listning on port 3000");

@@ -34,24 +34,28 @@ export class AdminComponent implements OnInit {
   get_users() {
     this.http.get('http://localhost:3000/api/users').subscribe(data => {
       this.users = data['value'];
+      console.log("USERS: " + this.users);
     })
   }
 
   get_groups() {
     this.http.get('http://localhost:3000/api/groups').subscribe(data => {
       this.groups = data['value'];
+      console.log("GROUPS: " + this.groups);
     })
   }
 
   get_channels() {
     this.http.get('http://localhost:3000/api/channels').subscribe(data => {
       this.channels = data['value'];
+      console.log("CHANNELS: " + this.channels);
     })
   }
 
   get_super_admins() {
     this.http.get('http://localhost:3000/api/super_admins').subscribe(data => {
       this.super_admins = data['value'];
+      console.log("SUPER ADMINS: " + this.super_admins);
     })
   }
 
@@ -82,12 +86,11 @@ export class AdminComponent implements OnInit {
     }
 
 
-    // this.get_users();
-    // this.get_groups();
-    // this.get_channels();
-    // this.get_super_admins();
+    this.get_users();
+    this.get_groups();
+    this.get_channels();
+    this.get_super_admins();
 
     console.log(this.users);
   }
-
 }

@@ -45,6 +45,7 @@ export class HomeComponent implements OnInit {
     localStorage.setItem('username', this.username);
     this.create_user();
     this.admin_check();
+
     this.router.navigateByUrl('chat');
   }
 

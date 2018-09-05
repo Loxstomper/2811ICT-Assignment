@@ -1,4 +1,5 @@
 
+<!-- chat box -->
 <div id="container">
     <div id="chat">
         <div *ngFor="let message of messages" class="message">
@@ -12,4 +13,16 @@
         <button (click)="sendMessage(message)" id="send"> Send </button>
     </div>
 </div>
+
+<!-- groups -->
+ <div>
+     <h1> Groups </h1>
+    <div id="table">
+        <table>
+            <tr *ngFor="let group of groups">
+                <td> {{ group.name }} </td>
+            </tr>
+        </table>
+    </div>
+ </div>
 
