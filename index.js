@@ -317,7 +317,7 @@ app.get('/api/channels/:id', function(req, res) {
 
 // ----------- POST METHODS ----------------- //
 
-app.post("./api/groups/make_admin", function(req, res){
+app.post("/api/groups/make_admin", function(req, res){
   res.setHeader("Content-Type", "application/json");
   let username = req.body.username;
   let user_id;
@@ -349,18 +349,18 @@ app.post("./api/groups/make_admin", function(req, res){
     {
       group_object_index = i;
       // check if the user is not already a group admin
-      for (let j = 0; j < group[i].admin_ids.length; j ++)
+      for (let j = 0; j < groups[i].admin_ids.length; j ++)
       {
         if (group[i].admin_ids[j] == user_id)
         {
-          res.send(JSON.stringify({success:"false", error:"use is already a group admin"}));
+          res.send(JSON.stringify({success:"false", error:"user is already a group admin"}));
           return;
         }
       }
     }
   }
 
-  if (group_id_exits < 0)
+  if (group_object_index < 0)
   {
     res.send(JSON.stringify({success:"false", error:"group not found"}));
     return;
@@ -733,7 +733,8 @@ app.post('/api/users/delete/', function(req, res) {
     return;
   }
 
-  console.log("DELETEING USER: " + user_data);
+  console.log("DELETEING USER: ");
+  console.log(user_data);
 
   // check if was a super admin
   for (let i = 0; i < super_admins.length; i ++)
@@ -751,11 +752,11 @@ app.post('/api/users/delete/', function(req, res) {
 
   // remove user from groups and channels
 
+  let group_object_index;
   // iterate over the group ids that the user is in
   console.log("USER WAS IN THE FOLLOWING GROUPS: " + user_data.group_ids);
   for (let group_id = 0; group_id < user_data.group_ids.length; group_id ++)
   {
-    let group_object_index;
     // get the actual group object index
     for (let i = 0; i < groups.length; i ++)
     {
