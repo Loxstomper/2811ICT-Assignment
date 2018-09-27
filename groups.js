@@ -41,7 +41,15 @@ module.exports = function() {
         let group_name = data.group_name;
         let username = data.username;
 
-        response.send(JSON.stringify({ok:"true", value:["channel1", "channel2"]}));
+        let channel_arr = []
+
+        for (let i = 0; i < 100; i ++)
+        {
+            channel_arr.push(i);
+        }
+
+        // response.send(JSON.stringify({ok:"true", value:["channel1", "channel2",]}));
+        response.send(JSON.stringify({ok:"true", value:channel_arr}));
     }
 
     this.set_db = function (db){

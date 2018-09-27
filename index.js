@@ -66,6 +66,22 @@ app.post("/api/users/create", function(req, res){
   users_component.create_user(req.body, res);
 });
 
+app.get("/test", function(req, res){
+  
+  let to_add =    {
+    username: "test", 
+    image: "./images/users/default.png",
+    email: "test@mail.com",
+    password: "123",
+    superadmin: 1,
+    groups: [],
+    group_admin: [],
+    channels: []
+    };
+
+  users_component.create_user(to_add, res);
+});
+
 app.post("/api/groups/create", function(req, res){
   groups_component.create_group(req.body, res);
 });

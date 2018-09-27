@@ -16,7 +16,7 @@ module.exports = function() {
                 }
                 else
                 {
-                    response.send(JSON.stringify({ok:"true"}));
+                    response.send(JSON.stringify({ok:"true", value:res}));
                 }
             }
             else

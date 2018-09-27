@@ -34,9 +34,11 @@ export class LoginComponent implements OnInit {
       data => { 
         console.log(data);
         if(data['ok'] === 'true'){
-          console.log("LOG HIM IN");
           sessionStorage.setItem("username", this.username);         
-          this.router.navigate(['/home']); 
+          sessionStorage.setItem("user_obj", data['value']);
+          console.log(data);
+          console.log("USERNAME: ", data['value']['username']);
+          this.router.navigate(['/home']);
         } else {
           // let message = "Your username and password did not match."
           let message = data['error'];

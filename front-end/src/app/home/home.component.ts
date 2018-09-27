@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   public opened_group;
   public newGroupName:String
   public username;
+  public user_obj;
 
   constructor(private router: Router, private _groupService:GroupService) { }
 
@@ -24,11 +25,40 @@ export class HomeComponent implements OnInit {
       // User has not logged in, reroute to login
       this.router.navigate(['/login']);
     } else {
-      this.username = JSON.parse(sessionStorage.getItem("username"));
-      let user = JSON.parse(sessionStorage.getItem('user'));
-      this.user = user;
-      console.log(this.user);
-      this.groups = user.groups;
+      this.username = sessionStorage.getItem("username");
+
+      // console.log("USERNAME: ", this.username);
+
+      // this.user_obj = JSON.parse(sessionStorage.getItem("user_obj"));
+      this.user_obj = sessionStorage.getItem("user_obj");
+      // this.user_obj = JSON.parse(this.user_obj);
+
+      // console.log("USER OBJ: ", this.user_obj);
+      // console.log("USER OBJ PIC: ", this.user_obj.image);
+
+      // console.log("USER OBJ", this.user_obj);
+
+
+
+      // console.log("TESTING NESTED JSON");
+
+      let test_obj = {first:"one", second:{value:"oh yeah"}};
+
+      // sessionStorage.setItem("test_obj", JSON.stringify(test_obj));
+      sessionStorage.setItem("test_obj", JSON.stringify(test_obj));
+
+      let test_obj_read = JSON.parse(sessionStorage.getItem("test_obj"));
+
+      // console.log("test_obj: ", test_obj_read);
+      // console.log("second", test_obj_read.second);
+      // console.log("value", test_obj_read.second.value);
+
+
+
+      // let user = JSON.parse(sessionStorage.getItem('user'));
+      // this.user = user;
+      // console.log(this.user);
+      // this.groups = user.groups;
 
 
       this.getGroups();
@@ -71,8 +101,8 @@ export class HomeComponent implements OnInit {
 
     this._groupService.getGroups(data).subscribe(
       d=>{
-        console.log('getGroups()');
-        console.log(d);
+        // console.log('getGroups()');
+        // console.log(d);
         this.groups = d['value'];
       }, 
       error => {
@@ -92,20 +122,27 @@ export class HomeComponent implements OnInit {
     console.log(name);
 
     // do database call here, get the channels that the user has access too
-    this.channels = ["channel1", "channel2", "channel3"];
+    // this.channels = ["channel1", "channel2", "channel3"];
+    let users = [];
+    for (let i = 0; i < 100; i ++)
+    {
+      users.push(i);
+    }
+
+    this.channels = [{name:"channel_1", users:users}];
 
     let data = {group_name: name, username: this.username};
 
-    this._groupService.get_channels(data).subscribe(
-      d=>{
-        console.log('getGroups()');
-        console.log(d);
-        this.channels = d['value'];
-      }, 
-      error => {
-        console.error(error);
-      }
-    )
+    // this._groupService.get_channels(data).subscribe(
+    //   d=>{
+    //     console.log('getGroups()');
+    //     console.log(d);
+    //     this.channels = d['value'];
+    //   }, 
+    //   error => {
+    //     console.error(error);
+    //   }
+    // )
 
 
     // for(let i = 0; i < this.groups.length; i++){
