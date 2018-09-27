@@ -1,0 +1,18 @@
+
+users = {username: "name",
+         image: "path",
+         email: "a@email.com",
+         password: "password",
+         superadmin: 1/0,
+         groups: ["g1", "g2"],
+         group_admin: ["g1],
+         channels: ["c1", "c2"]
+        }
+
+groups = {name: "name",
+          users: ["u1", "u2", ...],
+          channels: ["c1", "c2", ...],
+        }
+
+channels = {name: "name",
+}
