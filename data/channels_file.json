@@ -1,1 +1,1 @@
-[{"channel_id":1,"name":"test channel","group_id":1,"user_ids":[2]},{"channel_id":2,"name":"dsadsa","group_id":1,"user_ids":[]},{"channel_id":3,"name":"gool channel","group_id":2,"user_ids":[2]}]
+[{"channel_id":1,"name":"test channel","group_id":1,"user_ids":[2]},{"channel_id":2,"name":"dsadsa","group_id":1,"user_ids":[]},{"channel_id":3,"name":"gool channel","group_id":2,"user_ids":[2,3]},{"channel_id":4,"name":"test channel","group_id":3,"user_ids":[]}]

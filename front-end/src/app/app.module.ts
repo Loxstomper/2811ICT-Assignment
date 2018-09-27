@@ -1,35 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { SocketService } from './socket.service';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
+import { ChannelsComponent } from './channels/channels.component';
 import { ChatComponent } from './chat/chat.component';
-import { AdminComponent } from './admin/admin.component';
-import { LogoutComponent } from './logout/logout.component';
-import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
     HomeComponent,
-    ChatComponent,
-    AdminComponent,
-    LogoutComponent,
-    ProfileComponent
+    ChannelsComponent,
+    ChatComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpModule,
-    HttpClientModule
   ],
-  providers: [SocketService],
-  bootstrap: [AppComponent],
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
