@@ -19,6 +19,7 @@ app.use(cors(corsOptions));
 
 var login_component = require("./login.js")();
 var users_component = require("./users.js")();
+var groups_component = require("./groups.js")();
 
 // connect to mongodb
 var MongoClient = require('mongodb').MongoClient;
@@ -32,6 +33,7 @@ MongoClient.connect(url, {poolSize:10}, function(err, client) {
 
   login_component.set_db(db);
   users_component.set_db(db);
+  groups_component.set_db(db);
 
 
 
@@ -61,7 +63,21 @@ app.post("/api/login", function(req, res){
 });
 
 app.post("/api/users/create", function(req, res){
-  users_component.create_user("bob", "bob@gmail.com", res);
+  users_component.create_user(req.body, res);
+});
+
+app.post("/api/groups/create", function(req, res){
+  groups_component.create_group(req.body, res);
+});
+
+// returns all the groups a user is in
+app.post("/api/groups/", function(req, res){
+  groups_component.get_groups(req.body.username, res);
+});
+
+// returns all the channels  a user is in a specific group
+app.post("/api/groups/channels", function(req, res){
+  groups_component.get_channels(req.body.username, res);
 });
 
 

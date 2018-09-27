@@ -1,17 +1,26 @@
 module.exports = function() {
     this.db = null;
 
-    this.create_user = function(username, email, response){
+    this.create_user = function(data, response){
         // check if username exists
-        db.collection("users").findOne({username:username}, function(err, res) {
+        db.collection("users").findOne({username:data.username}, function(err, res) {
             if (err) throw err;
 
             if (res) {
-                response.send(JSON.stringify({ok:"false", error:"username: " + username + " already exists."}));
+                response.send(JSON.stringify({ok:"false", error:"username: " + data.username + " already exists."}));
             }
             else
             {
-                let to_add = {username:username, email:email, password:"123"};
+                let to_add =    {
+                                username: data.username, 
+                                image: "./images/users/default.png",
+                                email: data.email,
+                                password: "123",
+                                superadmin: data.superadmin,
+                                groups: data.groups,
+                                group_admin: data.group_admin,
+                                channels: data.channels
+                                };
 
                 db.collection("users").insert(to_add, function(err, res) {
                     if (err) throw err;

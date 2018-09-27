@@ -34,8 +34,8 @@ export class LoginComponent implements OnInit {
       data => { 
         console.log(data);
         if(data['ok'] === 'true'){
-          let temp = JSON.stringify(data);
-          sessionStorage.setItem('user', temp);         
+          console.log("LOG HIM IN");
+          sessionStorage.setItem("username", this.username);         
           this.router.navigate(['/home']); 
         } else {
           // let message = "Your username and password did not match."

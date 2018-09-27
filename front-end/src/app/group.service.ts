@@ -21,15 +21,23 @@ export class GroupService {
 
   createGroup(data){
     let body = JSON.stringify(data);
-    return this.http.post(this.api + 'group/create', body, httpOptions);
+    return this.http.post(this.api + 'groups/create', body, httpOptions);
   }
 
   deleteGroup(groupName, username){
     return this.http.delete(this.api + 'group/delete/' + groupName);
   }
+
   getGroups(data){
     let body = JSON.stringify(data);
     return this.http.post(this.api + 'groups', body, httpOptions);
   }
+
+  get_channels(data) {
+    let body = JSON.stringify({group_name:data.group_name, username:data.username});
+
+    return this.http.post(this.api + 'groups/channels', body, httpOptions);
+  }
+
 
 }
