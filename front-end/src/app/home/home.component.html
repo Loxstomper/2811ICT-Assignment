@@ -64,7 +64,7 @@
           <div class="card-body" style="height: 500px; overflow-y:hidden">
 
             <!-- New Channel Form -->
-            <div class="form-inline" >
+            <div *ngIf="super_admin" class="form-inline" >
               <form (submit)="createChannel($event)">
               <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="New Channel" type="text" [(ngModel)]="newGroupName">
               <button class="btn btn-primary" style="width:100px">Create</button>
@@ -97,4 +97,33 @@
         </div>
       </div>
     </div>
+</div>
+
+
+<button type="button" class="btn btn-danger col-lg-2" (click)="edit_group()"> TEST </button>
+<h2> test </h2>
+<h3 *ngIf="editing_group" EDIT GROUP> </h3>
+
+<!-- my editing group  -->
+<div *ngif="editing_group">
+  <h3> Edit Group </h3>
+    <form (submit)="edit_group($event)">
+    <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="exiisting name" channel" type="text" [(ngModel)]="newGroupName">
+    <button class="btn btn-primary" style="width:100px">Create</button>
+</div>
+
+<!-- my editing channel  -->
+<div *ngif="editing_group">
+  <h3> Edit Group </h3>
+    <form (submit)="edit_group($event)">
+    <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="exiisting name" channel" type="text" [(ngModel)]="newGroupName">
+    <button class="btn btn-primary" style="width:100px">Create</button>
+</div>
+
+<!-- my creating user  -->
+<div *ngif="editing_group">
+  <h3> Edit Group </h3>
+    <form (submit)="edit_group($event)">
+    <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="exiisting name" channel" type="text" [(ngModel)]="newGroupName">
+    <button class="btn btn-primary" style="width:100px">Create</button>
 </div>

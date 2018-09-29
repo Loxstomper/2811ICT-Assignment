@@ -19,6 +19,8 @@ export class HomeComponent implements OnInit {
   public username;
   public user_obj;
 
+  editing_group = false;
+
   constructor(private router: Router, private _groupService:GroupService) { }
 
   ngOnInit() {
@@ -169,6 +171,13 @@ export class HomeComponent implements OnInit {
     //   }
     // }
     // this.channels = this.selectedGroup.channels;
+  }
+
+  edit_group(){
+    // console.log("EDIT GROUP: ", group_name);
+    console.log("EDIT GROUP");
+    // this.editing_group = !this.editing_group;
+    this.editing_group = true;
   }
 
 
