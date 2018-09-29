@@ -68,6 +68,7 @@ app.post("/api/users/create", function(req, res){
 
 app.get("/test", function(req, res){
   
+  // NEED TO MAKE IT SO SUPER USER IS CREATED IF NOT EXISTS ON STARTUP
   let to_add =    {
     username: "test", 
     image: "./images/users/default.png",
@@ -84,6 +85,10 @@ app.get("/test", function(req, res){
 
 app.post("/api/groups/create", function(req, res){
   groups_component.create_group(req.body, res);
+});
+
+app.post("/api/groups/delete", function(req, res){
+  groups_component.delete_group(req.body, res);
 });
 
 // returns all the groups a user is in

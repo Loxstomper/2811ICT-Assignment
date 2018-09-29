@@ -29,10 +29,33 @@ module.exports = function() {
         })
     }
 
+    this.delete_group = function(data, response){
+        // check if group exists
+        db.collection("groups").deleteOne({name:data.name}, function(err, res) {
+            if (err) throw err;
+
+            console.log(res);
+            response.send(JSON.stringify({ok:"true"}));
+
+        })
+    }
+
     this.get_groups = function(username, response) {
         let groups = [];
+        let group;
 
-        response.send(JSON.stringify({ok:"true", value:["group1", "group2"]}));
+
+        db.collection("groups").find({}).toArray( function(err, res) {
+            if (err) throw err;
+
+            for (let i = 0; i < res.length; i ++)
+            {
+                // check if user is in res[i].users
+                groups.push(res[i].name);
+            }
+
+            response.send(JSON.stringify({ok:"true", value:groups}));
+        })
 
     }
 

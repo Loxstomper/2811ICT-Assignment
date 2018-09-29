@@ -9,6 +9,7 @@ import { GroupService } from '../group.service';
 })
 export class HomeComponent implements OnInit {
   public user;
+  public super_admin = true;
   public selectedGroup;
   public selectedChannel;
   public groups = [];
@@ -74,11 +75,26 @@ export class HomeComponent implements OnInit {
 
   createGroup(event){
     event.preventDefault();
+
+    if (! this.newGroupName)
+    {
+      alert("Please enter a group name");
+      return;
+    }
+
     let data = {'name': this.newGroupName};
     this._groupService.createGroup(data).subscribe(
       data => { 
         console.log(data);
-        this.getGroups();
+
+        if (data['ok'] === 'false')
+        {
+          alert(data['error']);
+        }
+        else 
+        {
+          this.getGroups();
+        }
       },
       error => {
         console.error(error);
@@ -87,7 +103,8 @@ export class HomeComponent implements OnInit {
   }
 
   deleteGroup(groupName){
-    this._groupService.deleteGroup(groupName, this.user.username).subscribe(
+    let data = {name:groupName, user:this.username}
+    this._groupService.deleteGroup(data).subscribe(
       data=>{
         this.getGroups();
       }, error =>{
@@ -102,8 +119,9 @@ export class HomeComponent implements OnInit {
     this._groupService.getGroups(data).subscribe(
       d=>{
         // console.log('getGroups()');
-        // console.log(d);
+        console.log(d);
         this.groups = d['value'];
+        console.log(this.groups);
       }, 
       error => {
         console.error(error);
