@@ -28,7 +28,7 @@ var upload_component = require("./upload.js")(formidable);
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/ass2";
 
-MongoClient.connect(url, {poolSize:10}, function(err, client) {
+MongoClient.connect(url, {poolSize:10, useNewUrlParser: true}, function(err, client) {
   if (err) throw err;
 
   const dbName = "ass2";
@@ -129,14 +129,7 @@ app.get("/api/images/users/:user", function(req, res){
 });
 
 app.post('/api/images/upload', function(req, res) {
-  // let x = upload_component.upload(req, res);
-  // console.log(x);
-
-  upload_component.upload(req, res).then( x => {
-    console.log(x);
-  });
-
-  // TELL MONGO TO UPDATE PATH
+  upload_component.upload(req, res);
 });
 
 

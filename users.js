@@ -44,11 +44,12 @@ module.exports = function() {
     }
 
     this.get_users = function(response) {
-            db.collection("users").find({}).project({_id: 0, username: 1}).toArray(function(err, res) {
-                console.log(res);
+            // db.collection("users").find({}).project({_id: 0, username: 1}).toArray(function(err, res) {
+            //     console.log(res);
 
-                response.send(JSON.stringify({value:res}));
-            });
+            //     response.send(JSON.stringify({value:res}));
+            // });
+            response.send(JSON.stringify({value:[1, 2, 3]}));
     }
 
     // used to create a super account if not exists
