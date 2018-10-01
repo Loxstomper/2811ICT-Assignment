@@ -40,7 +40,7 @@
           <div class="card-body" style="height: 500px; overflow-y:hidden">
 
             <!-- New Group Form -->
-            <div class="form-inline" >
+            <div *ngIf="user_obj.superadmin || user_obj.group_admin" class="form-inline" >
               <form (submit)="createGroup($event)">
                 <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="New Group" type="text" [(ngModel)]="newGroupName">
                 <button class="btn btn-primary" style="width:100px">Create</button>
