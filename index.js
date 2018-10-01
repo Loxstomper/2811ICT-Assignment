@@ -37,6 +37,7 @@ MongoClient.connect(url, {poolSize:10}, function(err, client) {
   login_component.set_db(db);
   users_component.set_db(db);
   groups_component.set_db(db);
+  upload_component.set_db(db);
 
   users_component.create_super();
 
@@ -128,7 +129,14 @@ app.get("/api/images/users/:user", function(req, res){
 });
 
 app.post('/api/images/upload', function(req, res) {
-  upload_component.upload(req, res);
+  // let x = upload_component.upload(req, res);
+  // console.log(x);
+
+  upload_component.upload(req, res).then( x => {
+    console.log(x);
+  });
+
+  // TELL MONGO TO UPDATE PATH
 });
 
 

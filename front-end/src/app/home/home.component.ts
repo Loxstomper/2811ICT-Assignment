@@ -368,8 +368,5 @@ export class HomeComponent implements OnInit {
       console.log(res);
     })
 
-
-
-
   }
 }
