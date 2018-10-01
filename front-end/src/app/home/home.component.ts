@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import { GroupService } from '../group.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,7 @@ import { GroupService } from '../group.service';
 })
 export class HomeComponent implements OnInit {
   public user;
-  public super_admin = true;
+  public super_admin = true; // remove this default value
   public selectedGroup;
   public selectedChannel;
   public groups = [];
@@ -21,7 +22,18 @@ export class HomeComponent implements OnInit {
 
   editing_group = false;
 
-  constructor(private router: Router, private _groupService:GroupService) { }
+  new_user = {
+      username: "", 
+      image: "./images/users/default.png",
+      email: "",
+      password: "",
+      superadmin: false,
+      groups: [],
+      group_admin: false,
+      channels: [] 
+      };
+
+  constructor(private router: Router, private _groupService:GroupService, private _userService:UserService) { }
 
   ngOnInit() {
     if(sessionStorage.getItem("username") === null){
@@ -196,5 +208,32 @@ export class HomeComponent implements OnInit {
   getChannels(groupName){
     let channels = [];
     return channels;
+  }
+
+  create_user(event) {
+
+    console.log("New user: " + this.new_user);
+    console.log("New user: " + this.new_user.username);
+    console.log("super: " + this.new_user.superadmin);
+
+    this._userService.create(this.new_user).subscribe(
+      data => { 
+        console.log(data);
+
+        if (data['ok'] === 'false')
+        {
+          alert(data['error']);
+        }
+        else 
+        {
+
+        }
+      },
+      error => {
+        console.error(error);
+      }
+    )
+
+
   }
 }

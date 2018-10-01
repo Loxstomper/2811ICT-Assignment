@@ -101,6 +101,9 @@ app.post("/api/groups/channels", function(req, res){
   groups_component.get_channels(req.body.username, res);
 });
 
+app.get("/api/images/users/:user", function(req, res){
+  res.sendFile(__dirname + "/images/users/" + req.params.user);
+});
 
 
 http.listen(3000);

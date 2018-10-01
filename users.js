@@ -15,7 +15,7 @@ module.exports = function() {
                                 username: data.username, 
                                 image: "./images/users/default.png",
                                 email: data.email,
-                                password: "123",
+                                password: data.password,
                                 superadmin: data.superadmin,
                                 groups: data.groups,
                                 group_admin: data.group_admin,
@@ -25,7 +25,7 @@ module.exports = function() {
                 db.collection("users").insert(to_add, function(err, res) {
                     if (err) throw err;
 
-                    console.log("INSERTED")
+                    console.log("INSERTED: ", to_add);
 
                     response.send(JSON.stringify({ok:"true"}));
                 })
