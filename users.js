@@ -34,6 +34,12 @@ module.exports = function() {
     }
 
     this.delete_user = function(username, response){
+        if (username === "super")
+        {
+            response.send(JSON.stringify({ok:"false", error:"Cannot delete user: super"}));
+            return;
+        }
+
         console.log("DELETING: ", username);
     }
 
@@ -43,6 +49,34 @@ module.exports = function() {
 
                 response.send(JSON.stringify({value:res}));
             });
+    }
+
+    // used to create a super account if not exists
+    this.create_super = function()
+    {
+        db.collection("users").findOne({username:"super"}, function(err, res) {
+            if (err) throw err;
+
+            if (!res)
+            {
+                console.log("CREATING SUPER USER");
+
+                let to_add =    {
+                                username: "super", 
+                                image: "./images/users/super.png",
+                                email: "",
+                                password: "pass",
+                                superadmin: 1,
+                                groups: [],
+                                group_admin: 1,
+                                channels: []
+                                };
+
+                db.collection("users").insert(to_add, function(err, res) {
+                    if (err) throw err;
+                })
+            }
+        })
     }
 
     this.set_db = function (db){

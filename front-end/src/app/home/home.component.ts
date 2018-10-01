@@ -245,6 +245,14 @@ export class HomeComponent implements OnInit {
 
     this._userService.delete(this.user_to_delete).subscribe(
       data => {
+        if (data['ok'] === 'true')
+        {
+          alert("user: " + this.user_to_delete + " has been deleted.");
+        }
+        else
+        {
+          alert("error: " + data['error']);
+        }
         console.log(data);
       },
       error => {
@@ -261,6 +269,7 @@ export class HomeComponent implements OnInit {
       data => {
         let x = data['value'];
 
+        this.all_users = [];
         for (let i = 0; i < x.length; i ++) {
          this.all_users.push(x[i]['username']);
         }

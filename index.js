@@ -35,6 +35,8 @@ MongoClient.connect(url, {poolSize:10}, function(err, client) {
   users_component.set_db(db);
   groups_component.set_db(db);
 
+  users_component.create_super();
+
 
 
   // db.close();
@@ -71,7 +73,6 @@ app.get("/api/users", function(req, res){
 });
 
 app.delete("/api/users/delete/:user", function(req, res){
-  console.log("I HAVE BEEN CALLED");
   users_component.delete_user(req.params.user, res);
 });
 
