@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
         console.log(data);
         if(data['ok'] === 'true'){
           sessionStorage.setItem("username", this.username);         
-          sessionStorage.setItem("user_obj", data['value']);
+          sessionStorage.setItem("user_obj", JSON.stringify(data['value']));
           console.log(data);
           console.log("USERNAME: ", data['value']['username']);
           this.router.navigate(['/home']);

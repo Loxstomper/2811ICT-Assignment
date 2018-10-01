@@ -10,7 +10,6 @@ import { UserService } from '../user.service';
 })
 export class HomeComponent implements OnInit {
   public user;
-  public super_admin = true; // remove this default value
   public selectedGroup;
   public selectedChannel;
   public groups = [];
@@ -21,6 +20,9 @@ export class HomeComponent implements OnInit {
   public user_obj;
 
   editing_group = false;
+
+  all_users = []
+  user_to_delete;
 
   new_user = {
       username: "", 
@@ -46,16 +48,7 @@ export class HomeComponent implements OnInit {
 
       // this.user_obj = JSON.parse(sessionStorage.getItem("user_obj"));
       this.user_obj = sessionStorage.getItem("user_obj");
-      // this.user_obj = JSON.parse(this.user_obj);
-
-      // console.log("USER OBJ: ", this.user_obj);
-      // console.log("USER OBJ PIC: ", this.user_obj.image);
-
-      // console.log("USER OBJ", this.user_obj);
-
-
-
-      // console.log("TESTING NESTED JSON");
+      this.user_obj = JSON.parse(this.user_obj);
 
       let test_obj = {first:"one", second:{value:"oh yeah"}};
 
@@ -63,6 +56,8 @@ export class HomeComponent implements OnInit {
       sessionStorage.setItem("test_obj", JSON.stringify(test_obj));
 
       let test_obj_read = JSON.parse(sessionStorage.getItem("test_obj"));
+
+      this.get_all_users();
 
       // console.log("test_obj: ", test_obj_read);
       // console.log("second", test_obj_read.second);
@@ -234,6 +229,48 @@ export class HomeComponent implements OnInit {
       }
     )
 
+    this.get_all_users();
+  }
 
+  delete_user(event) {
+    console.log(this.all_users);
+
+    if (! this.user_to_delete)
+    {
+      alert("Please select a user to delete");
+      return;
+    }
+
+    console.log(this.user_to_delete);
+
+    this._userService.delete(this.user_to_delete).subscribe(
+      data => {
+        console.log(data);
+      },
+      error => {
+        console.error(error);
+      }
+    );
+
+    this.get_all_users();
+
+  }
+
+  get_all_users() {
+    this._userService.get_users().subscribe(
+      data => {
+        let x = data['value'];
+
+        for (let i = 0; i < x.length; i ++) {
+         this.all_users.push(x[i]['username']);
+        }
+
+
+        console.log("USERS: ", this.all_users);
+      },
+      error => {
+        console.error(error);
+      }
+    );
   }
 }

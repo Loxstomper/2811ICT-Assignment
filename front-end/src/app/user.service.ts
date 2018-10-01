@@ -30,6 +30,11 @@ export class UserService {
   }
 
   delete(username){
+    console.log("YO IM DELETING");
     return this.http.delete(this.api + 'users/delete/'+username);
+  }
+
+  get_users(){
+    return this.http.get(this.api + "users", httpOptions);
   }
 }

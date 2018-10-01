@@ -124,18 +124,35 @@
     </form>
 </div> -->
 
+<h3> SUPERADMIN: {{ user_obj.superadmin }} </h3>
+
 <!-- my creating user  -->
-<!-- <div *ngif="editing_group"> -->
+<div *ngIf="user_obj.superadmin || user_obj.groupadmin">
   <h3> Create User </h3>
     <form (submit)="create_user($event)">
     <!-- <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="username" type="text" [(ngModel)]="newGroupName"> -->
     <input class="form-control" name="create_username"   placeholder="username" type="text" [(ngModel)]="new_user.username" required>
     <input class="form-control" name="create_email"      placeholder="someone@example.com" type="email" [(ngModel)]="new_user.email" required>
     <input class="form-control" name="create_password"   placeholder="password" type="password" [(ngModel)]="new_user.password" required>
-    <label *ngIf="super_admin">superadmin:
+    <label *ngIf="user_obj.superadmin">superadmin:
     <input class="form-control" name="create_superadmin" value="testing" type="checkbox" [(ngModel)]="new_user.superadmin">
     </label>
     <br><br>
     <button class="btn btn-primary" style="width:100px">Create</button>
     </form>
-<!-- </div> -->
+</div>
+
+<div *ngIf="user_obj.superadmin">
+  <h3> Delete User </h3>
+    <form (submit)="delete_user($event)">
+
+      <!-- <select ng-model="user_to_delete" ng-options="user for user in all_users">
+      </select> -->
+      <select name="user_to_delete" [(ngModel)]="user_to_delete">
+        <option *ngFor="let user of all_users" value="{{ user }}"> {{ user }} </option>
+      </select>
+
+    <br><br>
+    <button class="btn btn-danger" style="width:100px">Delete</button>
+    </form>
+</div>

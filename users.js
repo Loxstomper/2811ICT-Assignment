@@ -33,6 +33,18 @@ module.exports = function() {
         })
     }
 
+    this.delete_user = function(username, response){
+        console.log("DELETING: ", username);
+    }
+
+    this.get_users = function(response) {
+            db.collection("users").find({}).project({_id: 0, username: 1}).toArray(function(err, res) {
+                console.log(res);
+
+                response.send(JSON.stringify({value:res}));
+            });
+    }
+
     this.set_db = function (db){
         this.db = db;
     }

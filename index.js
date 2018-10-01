@@ -66,6 +66,15 @@ app.post("/api/users/create", function(req, res){
   users_component.create_user(req.body, res);
 });
 
+app.get("/api/users", function(req, res){
+  users_component.get_users(res);
+});
+
+app.delete("/api/users/delete/:user", function(req, res){
+  console.log("I HAVE BEEN CALLED");
+  users_component.delete_user(req.params.user, res);
+});
+
 app.get("/test", function(req, res){
   
   // NEED TO MAKE IT SO SUPER USER IS CREATED IF NOT EXISTS ON STARTUP
