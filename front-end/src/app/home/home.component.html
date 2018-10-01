@@ -101,33 +101,25 @@
 </div>
 
 
-<button type="button" class="btn btn-danger col-lg-2" (click)="edit_group()"> TEST </button>
-<h2> test </h2>
-<h3 *ngIf="editing_group" EDIT GROUP> </h3>
-
-<img src="../../../../images/users/default.png">
-<!-- my editing group  -->
-<!-- <div *ngif="editing_group">
-  <h3> Edit Group </h3>
-    <form (submit)="edit_group($event)">
-    <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="exiisting name" channel" type="text" [(ngModel)]="newGroupName">
-    <button class="btn btn-primary" style="width:100px">Create</button>
-    </form>
-</div> -->
-
-<!-- my editing channel  -->
-<!-- <div *ngif="editing_group">
-  <h3> Edit Group </h3>
-    <form (submit)="edit_group($event)">
-    <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="exiisting name" channel" type="text" [(ngModel)]="newGroupName">
-    <button class="btn btn-primary" style="width:100px">Create</button>
-    </form>
-</div> -->
-
 <h3> SUPERADMIN: {{ user_obj.superadmin }} </h3>
+<h3> GROUP ADMIN: {{ user_obj.group_admin }} </h3>
+
+<br><br>
+<!-- uploading image -->
+<h3> Upload profile picture </h3>
+<form>
+  <div class="form-group">
+    <input type="file" class="form-control" (change)="on_file_selected($event)" name="uploadfile">
+    <button class="btn btn-primary" type="button" (click)="upload_file()"> Upload </button>
+  </div>
+</form> 
+
+
+<br><br>
 
 <!-- my creating user  -->
-<div *ngIf="user_obj.superadmin || user_obj.groupadmin">
+
+<div *ngIf="user_obj.superadmin || user_obj.group_admin">
   <h3> Create User </h3>
     <form (submit)="create_user($event)">
     <!-- <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="username" type="text" [(ngModel)]="newGroupName"> -->
@@ -137,10 +129,15 @@
     <label *ngIf="user_obj.superadmin">superadmin:
     <input class="form-control" name="create_superadmin" value="testing" type="checkbox" [(ngModel)]="new_user.superadmin">
     </label>
+    <label>group admin:
+    <input class="form-control" name="create_superadmin" value="testing" type="checkbox" [(ngModel)]="new_user.superadmin">
+    </label>
     <br><br>
     <button class="btn btn-primary" style="width:100px">Create</button>
     </form>
 </div>
+
+<br><br>
 
 <div *ngIf="user_obj.superadmin">
   <h3> Delete User </h3>

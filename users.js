@@ -22,7 +22,7 @@ module.exports = function() {
                                 channels: data.channels
                                 };
 
-                db.collection("users").insert(to_add, function(err, res) {
+                db.collection("users").insertOne(to_add, function(err, res) {
                     if (err) throw err;
 
                     console.log("INSERTED: ", to_add);

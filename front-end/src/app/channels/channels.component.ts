@@ -11,9 +11,12 @@ export class ChannelsComponent implements OnInit {
   @Input() group;
   @Output() channelChanged: EventEmitter<string> = new EventEmitter();
 
+  user_obj;
+
   constructor() { }
 
   ngOnInit() {
+    this.user_obj = JSON.parse(sessionStorage.getItem("user_obj"));
   }
 
   changeChannel(name){

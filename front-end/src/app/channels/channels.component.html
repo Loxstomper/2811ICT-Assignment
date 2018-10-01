@@ -1,5 +1,15 @@
 <div class="btn-group-vertical" style="width: 100%">
   <p *ngIf="channels.length == 0" style="width: 100%;text-align:center">No channels available</p>
   <!-- <button *ngFor="let channel of channels" (click)="changeChannel(channel.name)" type="button" class="btn btn-outline-primary" style="width: 100%">{{ channel.name }}</button> -->
-  <button *ngFor="let channel of channels" (click)="changeChannel(channel)" type="button" class="btn btn-outline-primary" style="width: 100%">{{ channel }}</button>
+
+  <div *ngIf="user_obj.superadmin || user_obj.groupadmin">
+    <button *ngFor="let channel of channels" (click)="changeChannel(channel)" type="button" class="btn btn-outline-primary" style="width: 75%">{{ channel }}</button>
+    <button *ngFor="let channel of channels" (click)="changeChannel(channel)" type="button" class="btn btn-primary" style="width: 12.5%"> + </button>
+    <button *ngFor="let channel of channels" (click)="changeChannel(channel)" type="button" class="btn btn-danger" style="width: 12.5%"> - </button>
+  </div>  
+
+  <div *ngIf="!(user_obj.superadmin || user_obj.groupadmin)">
+    <button *ngFor="let channel of channels" (click)="changeChannel(channel)" type="button" class="btn btn-outline-primary" style="width: 100%">{{ channel }}</button>
+  </div>  
+
 </div>

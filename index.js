@@ -3,6 +3,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
+var formidable = require('formidable');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
@@ -21,6 +22,7 @@ var login_component = require("./login.js")();
 var users_component = require("./users.js")();
 var groups_component = require("./groups.js")();
 var channel_commponent = require("./channels.js")();
+var upload_component = require("./upload.js")(formidable);
 
 // connect to mongodb
 var MongoClient = require('mongodb').MongoClient;
@@ -123,6 +125,10 @@ app.post("/api/groups/channels/add", function(req, res){
 
 app.get("/api/images/users/:user", function(req, res){
   res.sendFile(__dirname + "/images/users/" + req.params.user);
+});
+
+app.post('/api/images/upload', function(req, res) {
+  upload_component.upload(req, res);
 });
 
 

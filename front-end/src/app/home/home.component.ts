@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import { GroupService } from '../group.service';
 import { UserService } from '../user.service';
+import { UploadService} from '../upload.service';
 
 @Component({
   selector: 'app-home',
@@ -37,7 +38,9 @@ export class HomeComponent implements OnInit {
       channels: [] 
       };
 
-  constructor(private router: Router, private _groupService:GroupService, private _userService:UserService) { }
+  selected_file;
+
+  constructor(private router: Router, private _groupService:GroupService, private _userService:UserService, private _uploadService:UploadService) { }
 
   ngOnInit() {
     if(sessionStorage.getItem("username") === null){
@@ -346,5 +349,27 @@ export class HomeComponent implements OnInit {
         console.error(error);
       }
     );
+  }
+
+  on_file_selected(event)
+  {
+    this.selected_file = event.target.files[0];
+    console.log("File: ", this.selected_file);
+  }
+
+  upload_file()
+  {
+    const fd = new FormData();
+    // fd.append('image', this.selected_file, this.selected_file.name);
+    let extension = this.selected_file.name.split('.').pop();
+    fd.append('image', this.selected_file, this.user_obj.username + "." + extension);
+
+    this._uploadService.img_upload(fd).subscribe(res=> {
+      console.log(res);
+    })
+
+
+
+
   }
 }
