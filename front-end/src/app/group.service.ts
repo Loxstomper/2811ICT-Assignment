@@ -40,5 +40,15 @@ export class GroupService {
     return this.http.post(this.api + 'groups/channels', body, httpOptions);
   }
 
+  create_channel(data) {
+    let body = JSON.stringify({group:data.group, name:data.name});
+    return this.http.post(this.api + 'groups/channels/add', body, httpOptions);
+
+  }
+
+  get_channel_users(name) {
+    return this.http.get(this.api + 'groups/channels/users/' + name, httpOptions);
+  }
+
 
 }

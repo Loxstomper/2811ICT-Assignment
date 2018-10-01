@@ -20,6 +20,7 @@ app.use(cors(corsOptions));
 var login_component = require("./login.js")();
 var users_component = require("./users.js")();
 var groups_component = require("./groups.js")();
+var channel_commponent = require("./channels.js")();
 
 // connect to mongodb
 var MongoClient = require('mongodb').MongoClient;
@@ -106,9 +107,19 @@ app.post("/api/groups/", function(req, res){
   groups_component.get_groups(req.body.username, res);
 });
 
-// returns all the channels  a user is in a specific group
+// set intersection between groups channels and the clients channels
 app.post("/api/groups/channels", function(req, res){
-  groups_component.get_channels(req.body.username, res);
+  groups_component.get_channels(req.body, res);
+});
+
+app.get("/api/groups/channels/users/:channel", function(req, res) {
+  console.log(req.params);
+  console.log(req.params.channel);
+  channel_commponent.get_users(req.params.channel, res);
+});
+
+app.post("/api/groups/channels/add", function(req, res){
+  channel_commponent.create_channel(req.body, res);
 });
 
 app.get("/api/images/users/:user", function(req, res){

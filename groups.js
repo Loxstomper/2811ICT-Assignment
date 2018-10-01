@@ -24,6 +24,7 @@ module.exports = function() {
                     console.log(to_add);
 
                     response.send(JSON.stringify({ok:"true"}));
+                    return;
                 })
             }
         })
@@ -36,6 +37,7 @@ module.exports = function() {
 
             console.log(res);
             response.send(JSON.stringify({ok:"true"}));
+            return;
 
         })
     }
@@ -55,24 +57,39 @@ module.exports = function() {
             }
 
             response.send(JSON.stringify({ok:"true", value:groups}));
+            return;
         })
 
     }
 
+// set intersection between groups channels and the clients channels
     this.get_channels = function(data, response) {
 
         let group_name = data.group_name;
         let username = data.username;
+        console.log(group_name);
 
-        let channel_arr = []
+        // get all the channels in the group
+        db.collection("groups").find({name:group_name}).project({_id:0, channels:1}).toArray(function(err, res) {
 
-        for (let i = 0; i < 100; i ++)
-        {
-            channel_arr.push(i);
-        }
+            console.log(res);
+            let channels = res[0]['channels'];
+            console.log("THIS IS what im sending", {ok:"true", value:JSON.stringify(channels)});
+            // response.send(JSON.stringify({ok:"true", value:res['channels']}));
+            // response.send(JSON.stringify({ok:"true", value:JSON.stringify(channels)}));
+            response.send(JSON.stringify({ok:"true", value:channels}));
 
-        // response.send(JSON.stringify({ok:"true", value:["channel1", "channel2",]}));
-        response.send(JSON.stringify({ok:"true", value:channel_arr}));
+        });
+
+        // let channel_arr = []
+
+        // for (let i = 0; i < 100; i ++)
+        // {
+        //     channel_arr.push(i);
+        // }
+
+        // // response.send(JSON.stringify({ok:"true", value:["channel1", "channel2",]}));
+        // response.send(JSON.stringify({ok:"true", value:['one']}));
     }
 
     this.set_db = function (db){

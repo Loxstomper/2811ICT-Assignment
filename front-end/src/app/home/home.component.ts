@@ -24,6 +24,8 @@ export class HomeComponent implements OnInit {
   all_users = []
   user_to_delete;
 
+  new_channel_name;
+
   new_user = {
       username: "", 
       image: "./images/users/default.png",
@@ -138,6 +140,38 @@ export class HomeComponent implements OnInit {
     )
   }
 
+  create_channel(event) {
+    event.preventDefault();
+
+    if (!this.opened_group)
+    {
+      alert("Open a group first");
+      return
+    }
+
+    if (!this.new_channel_name)
+    {
+      alert("Enter a channel name");
+      return;
+    }
+    
+    // really should add the creator the to channel but oh well
+    console.log("creating channel: " + this.opened_group + "/" + this.new_channel_name);
+
+    let data = {name:this.new_channel_name, group:this.opened_group, users:[]};
+
+    this._groupService.create_channel(data).subscribe(
+      d=>{
+        // console.log('getGroups()');
+        console.log(d);
+      }, 
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
+
   logout(){
     sessionStorage.clear();
     this.router.navigate(['/login']);
@@ -149,16 +183,24 @@ export class HomeComponent implements OnInit {
     console.log(name);
 
     // do database call here, get the channels that the user has access too
-    // this.channels = ["channel1", "channel2", "channel3"];
     let users = [];
     for (let i = 0; i < 100; i ++)
     {
       users.push(i);
     }
 
-    this.channels = [{name:"channel_1", users:users}];
+    let data = {group_name: name, username: this.user_obj.username};
 
-    let data = {group_name: name, username: this.username};
+    this._groupService.get_channels(data).subscribe(
+      d=> {
+        console.log(d);
+        this.channels = d['value'];
+      },
+      error => {
+        console.error(error);
+      }
+    );
+
 
     // this._groupService.get_channels(data).subscribe(
     //   d=>{
@@ -198,6 +240,27 @@ export class HomeComponent implements OnInit {
       }
     }
     return found;
+  }
+
+  get_channel_users(name)
+  {
+    this._groupService.get_channel_users(name).subscribe(
+      data => { 
+        console.log(data);
+
+        if (data['ok'] === 'false')
+        {
+          alert(data['error']);
+        }
+        else 
+        {
+
+        }
+      },
+      error => {
+        console.error(error);
+      }
+    )
   }
   
   getChannels(groupName){

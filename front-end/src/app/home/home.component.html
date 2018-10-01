@@ -51,7 +51,7 @@
             <div style="height: 500px; overflow-y:auto">
               <div class="row" *ngFor="let group of groups">
                   <button type="button" (click)="openGroup(group)" class="btn btn-outline-success col-lg-12">{{ group }}</button>
-                  <button type="button" class="btn btn-danger col-lg-2" (click)="deleteGroup(group)" *ngIf="super_admin">-</button>
+                  <button type="button" class="btn btn-danger col-lg-2" (click)="deleteGroup(group)" *ngIf="user_obj.superadmin">-</button>
               </div>
             </div>
           </div>
@@ -65,9 +65,9 @@
           <div class="card-body" style="height: 500px; overflow-y:hidden">
 
             <!-- New Channel Form -->
-            <div *ngIf="super_admin" class="form-inline" >
-              <form (submit)="createChannel($event)">
-              <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="New Channel" type="text" [(ngModel)]="newGroupName">
+            <div *ngIf="user_obj.superadmin || user_obj.group_admin" class="form-inline" >
+              <form (submit)="create_channel($event)">
+              <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="New Channel" type="text" [(ngModel)]="new_channel_name">
               <button class="btn btn-primary" style="width:100px">Create</button>
               </form>
             </div>

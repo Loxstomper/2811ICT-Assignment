@@ -15,5 +15,6 @@ groups = {name: "name",
         }
 
 channels = {name: "name",
+            group: "name",
             users: ["u1", "u2"]
             }
