@@ -113,8 +113,7 @@ app.post("/api/groups/channels", function(req, res){
 });
 
 app.get("/api/groups/channels/users/:channel", function(req, res) {
-  console.log(req.params);
-  console.log(req.params.channel);
+  // console.log("PARAMS: ", req.params);
   channel_commponent.get_users(req.params.channel, res);
 });
 

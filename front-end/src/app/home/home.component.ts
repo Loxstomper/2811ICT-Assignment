@@ -239,6 +239,8 @@ export class HomeComponent implements OnInit {
         found = true;
       }
     }
+
+    this.get_channel_users(name);
     return found;
   }
 
@@ -246,7 +248,7 @@ export class HomeComponent implements OnInit {
   {
     this._groupService.get_channel_users(name).subscribe(
       data => { 
-        console.log(data);
+        console.log("CHANNEL USERS: ", data);
 
         if (data['ok'] === 'false')
         {
