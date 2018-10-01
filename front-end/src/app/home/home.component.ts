@@ -117,6 +117,13 @@ export class HomeComponent implements OnInit {
   }
 
   deleteGroup(groupName){
+    if (!(this.user_obj.superadmin || this.user_obj.group_admin))
+    {
+      alert("No permissions");
+      return;
+    }
+
+
     let data = {name:groupName, user:this.username}
     this._groupService.deleteGroup(data).subscribe(
       data=>{

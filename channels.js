@@ -58,11 +58,24 @@ module.exports = function() {
                 })
             }
         });
+    }
 
+    this.add_user = function(data, response) {
+        // make sure user not already in the channel
+        // add to channel[users]
+        // add channel to user
+        // if not in group add user to group
 
     }
 
-    this.delete_group = function(data, response){
+
+
+    this.delete_channel = function(data, response){
+        // iterate through all users
+        // delete the channel from the users
+        // delete the channel from the group
+        // delete channel
+
         // check if group exists
         db.collection("groups").deleteOne({name:data.name}, function(err, res) {
             if (err) throw err;

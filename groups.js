@@ -31,7 +31,14 @@ module.exports = function() {
     }
 
     this.delete_group = function(data, response){
-        // check if group exists
+        // get group object
+        // iterate through list of channels and delete them
+        // delete the channels from the users
+        // delete the group fromt he users
+        // delete group
+
+        // db.collection("groups").findOne({name:data.name}, function(err, res) {
+
         db.collection("groups").deleteOne({name:data.name}, function(err, res) {
             if (err) throw err;
 
