@@ -4,31 +4,37 @@
 
 ## Git Repo and version control approach
 
-The node project is in the root of the repo, index.js being the entry point, the data directory stores a JSON representation of the internal data structures and the angular project is in the directory front-end. The angular project can then be built and node can statically serve it
+Assignment 1 is on the master branch, assignment 2 is on the branch "ASS-2", in order to maintain seperation between assignments without having to create a new Repo.
+The node project is in the root of the repo (including modules), index.js being the entry point, the image directory stores all images on the site and the angular project is in the directory front-end. The angular project can then be built and node can statically serve it
 
 The approach I took to version contorl was to to commit and push my changes frequently, after writing a block of code and testing I would then commit with a meaningful message to myself and then push to GitHub. This ensured that if an issue did happen I would have multiple "recent" points to go back to. I also commit for simple reminders for myself.
 
 ### Datastructures
 
-The main datastructures used in the program are for storing user data, super admins, groups and channels. This was achieved by using arrays of javascript objects which were than able to be saved to file everytime a modification was made and loaded into memory when the server would start. Below are the arrays with a sample javascript object (record).
+Below are the Documents that were stored in the mongodb collections
 
-var users = [
-  {user_id: 0, username: "super", email:"", group_ids:[0]},
-]
 
-var super_admins = [
-  {super_id: 0, user_id: 0}
-]
+users = {username: "name",
+         image: "path",
+         email: "a@email.com",
+         password: "password",
+         superadmin: 1/0,
+         groups: ["g1", "g2"],
+         group_admin: 1/0,
+         channels: ["c1", "c2"]
+        }
 
-var groups = [
-  {group_id: 0, name:"first group", channel_ids:[1], admin_ids:[0, 1], user_ids:[0, 1]},
-]
+groups = {name: "name",
+          users: ["u1", "u2", ...],
+          channels: ["c1", "c2", ...],
+        }
 
-var channels = [
-  {channel_id: 0, name:"first channel", group_id:0, user_ids:[1]},
-]
+channels = {name: "name",
+            group: "name",
+            users: ["u1", "u2"]
+            }
 
-A few of these datastructures are doubly linked, for example a user knows what groups it is in and the groups know which users are in it. This was used in order to make the adding of users and deleting of users much easier, think of a cascade delete in SQL for example. It also allows 'reverse lookups'. I also decided on making each component uniquely identifiable by using a unique id (auto increment), that way multiple groups could have the same name as well as channels. The usernames are unique however but I would prefer to solely base identification of a user from their ID and not their username.
+A few of these datastructures are doubly linked, for example a user knows what groups it is in and the groups know which users are in it. This was used in order to make the adding of users and deleting of users much easier, think of a cascade delete in SQL for example. Unique usernames, Unique channel and groups names. The user object contains if they are a superadmin or group_admin purely for client side rendering and some basic 'authentication'
 
 ### Client vs Server responsibilities
 
@@ -38,107 +44,78 @@ There is no server-side user authentication at the moment, so that responsibilit
 
 ### REST API
 
-GET: /api/users
-  * returns all the users objects that are stored server side
-  * response {success:"true", value:users}
+The general response pattern is
+{ok:"true"} OR {ok:"true", value:""} OR {ok:"false", error:""}
 
-GET: /api/users/:id
-  * returns a specific user object identified by their user_id or username that is stored server side
-  * response {success:"true", value:user}
+POST "/api/login"
+* takes username/password
+* returns if successful login and if not the reason
 
-GET: /api/super_admins
-  * returns all the super admin objects
+POST "/api/users/create"
+* create a user
+* returns if successful and if not why
 
-GET: /api/super_admins/:id
-  * returns the super admin object from a user_id, if not found returns error 
+GET "/api/users"
+* gets all users
 
-GET: /api/groups
-  * returns all the group objects
+DELETE "/api/users/delete/:user"
+* deletes a specific user by username
 
-GET: /api/groups/:id
-  * returns a specific group object based of the group_id, if not found returns error
+POST "/api/groups/create"
+* creates a group
+* returns if successful and if not why
 
-GET: /api/groups_and_channels_from_username
-  * returns an object containing all the groups and the channels in those groups the a user was in based off a username, if not found returns error
+POST "/api/groups/delete"
+* deletes a group based of group name
 
-GET: /api/channels
-  * returns all the channel objects
+POST "/api/groups/"
+* returns all the groups a user is in
 
-GET: /api/channels/:id
-  * returns a specific channel object based off channel_id, if not found returns error
+POST "/api/groups/channels"
+* gets the channels in a group a user is in
 
-POST: /api/groups/is_admin
-  * given a username
-  * returns whether or not that user is a group admin in at least one group
+GET "/api/groups/channels/users/:channel"
+* gets the users in a channel
 
-POST: /api/users/create
-  * given a username, email address, and wether or not they are to be a super admin
-  * creates a user
-  * returns if successfull or if failed the error
+POST "/api/groups/channels/add"
+* creates a channel 
 
-POST: /api/groups/create
-  * given a group name
-  * creates a group
+GET "/api/images/users/:user"
+* gets a users image from username
 
-POST: /api/channels/create
-  * given the parent group name and the channel name
-  * creates the channel and references the group, group also has a refrence to the channel
-  * returns if creation was successfull else returns the error
+POST '/api/images/upload'
+* uploads an image
 
-POST: /api/channels/invite
-  * given a username and channel_id
-  * adds a user to the channel and parent group
-  * if the user does not exist they will be created
-  * returns if successfull else the reason why not
 
-POST: /api/users/delete
-  * given a user_id
-  * deletes the user, also from super admins, from every group they are in and also every channel
-
-POST: /api/channels/delete
-  * given a channel_id
-  * remove the channel from the group
-
-POST: /api/channels/delete_user/
-  * given a user_id
-  * removes user from that channels
-
-POST: /api/groups/delete
-  * given a group_id
-  * deletes group, channels in group, and reference of the group in the users
 
 
 ### Angular Architecture
 
 #### Components
 
-##### admin
-  * provides access to the above API endpoints
-  * depending on admin level some features are blocked, as stated in task sheet
+##### channels
+  * Panel that displays a list of channels (embedded in home component)
 
 ##### chat
-  * where the full chat functionality will be in part 2, multiple groups and channels, broadcast to other users, etc.
+  * The component that handles the chat (embedded in home component)
 
 ##### home
-  * the login
-  * creates user on the server if does not exist
+  * The main page, also has administration and modifications at the bottom of the page
 
-##### logout
-  * just logs out and redirects to home
-
-##### profile
-  * shows some information about the logged in user, assumming theremaybe some user modifications in part 2
+##### login
+  * loging screen, when successfully login redirects to home page
 
 #### Models
 
   * Models are used for 2 way bindings between the components html and the components typescript
 
-### Isues / Notes
+#### Services
 
-Some of the API endpoints are broken, I thought it would be good to have optional arguments for example "/api/groups/:id" however that makes the following route invalid "/api/groups/foo/bar". I have implemented all the endpoints its just they are not all accessible, but you will see them if you look at the index.js file.
+#### Groups
+  * all group functionality
 
-I developed a static html page for my own testing early on in the development of the REST api, it can be reached at "/api/test", and allows interaction with the API. Unfourtantely I had issues creating my Admin page, It was working but when I added all the HTML functioanlity I was getting Angular errors. Im quite dissapointed by this so you will have to look at the admin.component.html file to get an idea of its functions. The "/api/test" is a decent substitute for testing though.
+#### Upload
+  * handles  uploading the images
 
-I understand the index.js file is very large, as I did not split it into smaller files, if you have any questions please feel free to ask and I am happy to explain.
-
-The vast majority of the functionality is implemented, but due to time constraints and lack of knowledge not all functionality was able to be accomplished. I am looking forward to part 2 where Mongo DB can be used because using databases to handle the data will make some of the 'complicated' tasks I had to perform trivial, and I will be able to focus on the functioanlity.
+#### User
+  * handles a lot of the user functionality regarding API calls
