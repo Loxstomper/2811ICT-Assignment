@@ -1,14 +1,20 @@
 module.exports = function() {
     this.db = null;
 
+    // only creates a user if the username is unique
     this.create_user = function(data, response){
         // check if username exists
         db.collection("users").findOne({username:data.username}, function(err, res) {
-            if (err) throw err;
+            if (err) 
+            {
+                console.log("ERROR IN CREATING USERS, lookup");
+                throw err;
+            }
 
             if (res) {
                 response.send(JSON.stringify({ok:"false", error:"username: " + data.username + " already exists."}));
             }
+            // username not present in database
             else
             {
                 let to_add =    {
@@ -22,6 +28,7 @@ module.exports = function() {
                                 channels: data.channels
                                 };
 
+                // create the user
                 db.collection("users").insertOne(to_add, function(err, res) {
                     if (err) throw err;
 
@@ -33,6 +40,7 @@ module.exports = function() {
         })
     }
 
+    // cannot delete super
     this.delete_user = function(username, response){
         if (username === "super")
         {
@@ -43,6 +51,7 @@ module.exports = function() {
         console.log("DELETING: ", username);
     }
 
+    // returns array of objects contaning username and image path
     this.get_users = function(response) {
             // db.collection("users").find({}).project({_id: 0, username: 1}).toArray(function(err, res) {
             //     console.log(res);

@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    // the user is already logged in
     if(sessionStorage.getItem('user') !== null){
       this.router.navigate(['/home']);
     }
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
       data => { 
         console.log(data);
         if(data['ok'] === 'true'){
+          // store the username anduserobject into database
           sessionStorage.setItem("username", this.username);         
           sessionStorage.setItem("user_obj", JSON.stringify(data['value']));
           console.log(data);

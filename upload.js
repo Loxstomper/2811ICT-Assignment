@@ -7,9 +7,6 @@ module.exports = function(formidable) {
         var form = new formidable.IncomingForm({uploadDir: './images/users'});
         form.keepExtensions = true;
 
-        var file_name;
-        
-
         form.on('error', function(err) {
             res.send({ok:"false"});
             throw err;
@@ -17,6 +14,7 @@ module.exports = function(formidable) {
 
         form.on('fileBegin', function(name, file) {
             file_name = file.name;
+            // want the path to be ./images/users/username.extension
             file.path = form.uploadDir + "/" + file.name;
         });
 

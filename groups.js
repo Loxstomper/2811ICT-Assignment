@@ -2,6 +2,7 @@ module.exports = function() {
     this.db = null;
 
     this.create_group = function(data, response){
+        console.log("CREATING GROUP");
         // check if group exists
         db.collection("groups").findOne({name:data.name}, function(err, res) {
             if (err) throw err;
@@ -31,6 +32,7 @@ module.exports = function() {
     }
 
     this.delete_group = function(data, response){
+        console.log("DELETE GROUP");
         // get group object
         // iterate through list of channels and delete them
         // delete the channels from the users
@@ -49,13 +51,20 @@ module.exports = function() {
         })
     }
 
+    // pass user object and if they superadmin or groupadmin show all
     this.get_groups = function(username, response) {
+        console.log("GETTING GROUPS for user: ", username);
         let groups = [];
         let group;
 
 
         db.collection("groups").find({}).toArray( function(err, res) {
-            if (err) throw err;
+            // if (err) throw err;
+
+            console.log("ERR: ", err);
+            console.log("RES: ", res);
+
+            return;
 
             for (let i = 0; i < res.length; i ++)
             {
@@ -63,9 +72,13 @@ module.exports = function() {
                 groups.push(res[i].name);
             }
 
+            console.log("GROUPS: ", groups);
             response.send(JSON.stringify({ok:"true", value:groups}));
             return;
         })
+
+        // console.log("COULDNT FIND ANY GROUPS");
+        // response.send(JSON.stringify({ok:"true", value:['FUCK THIS SHIT']}));
 
     }
 
@@ -78,6 +91,11 @@ module.exports = function() {
 
         // get all the channels in the group
         db.collection("groups").find({name:group_name}).project({_id:0, channels:1}).toArray(function(err, res) {
+            if (err)
+            {
+                console.log("DB FAILED LOOKING UP CHANNELS IN GROUP");
+                throw err;
+            }
 
             console.log(res);
             let channels = res[0]['channels'];

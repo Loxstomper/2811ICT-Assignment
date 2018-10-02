@@ -20,6 +20,8 @@ export class HomeComponent implements OnInit {
   public username;
   public user_obj;
 
+  channel_users = [];
+
   editing_group = false;
 
   all_users = []
@@ -43,6 +45,7 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router, private _groupService:GroupService, private _userService:UserService, private _uploadService:UploadService) { }
 
   ngOnInit() {
+    console.log("ngOnINIT");
     if(sessionStorage.getItem("username") === null){
       // User has not logged in, reroute to login
       this.router.navigate(['/login']);
@@ -64,19 +67,8 @@ export class HomeComponent implements OnInit {
 
       this.get_all_users();
 
-      // console.log("test_obj: ", test_obj_read);
-      // console.log("second", test_obj_read.second);
-      // console.log("value", test_obj_read.second.value);
-
-
-
-      // let user = JSON.parse(sessionStorage.getItem('user'));
-      // this.user = user;
-      // console.log(this.user);
-      // this.groups = user.groups;
-
-
       this.getGroups();
+
 
       if(this.groups.length > 0){
         this.openGroup(this.groups[0].name);
@@ -87,7 +79,9 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  // no need to check perms because i use a ngif in the html
   createGroup(event){
+    console.log("CREATE GROUP");
     event.preventDefault();
 
     if (! this.newGroupName)
@@ -116,7 +110,9 @@ export class HomeComponent implements OnInit {
     )
   }
 
+  // not using ngif in html so need to check perms
   deleteGroup(groupName){
+    console.log("DELETE GROUP");
     if (!(this.user_obj.superadmin || this.user_obj.group_admin))
     {
       alert("No permissions");
@@ -134,7 +130,9 @@ export class HomeComponent implements OnInit {
     )
   }
 
+  // gets the groups the user is in
   getGroups(){
+    console.log("GET GROUPS");
     let data = {'username': this.username}
 
     this._groupService.getGroups(data).subscribe(
@@ -142,15 +140,17 @@ export class HomeComponent implements OnInit {
         // console.log('getGroups()');
         console.log(d);
         this.groups = d['value'];
-        console.log(this.groups);
+        console.log("Groups: ", this.groups);
       }, 
       error => {
+        console.log("FAILED TO GET GROUPS");
         console.error(error);
       }
     )
   }
 
   create_channel(event) {
+    console.log("CREATE CHANNEL");
     event.preventDefault();
 
     if (!this.opened_group)
@@ -176,6 +176,7 @@ export class HomeComponent implements OnInit {
         console.log(d);
       }, 
       error => {
+        console.log("FAILED TO create GROUPS");
         console.error(error);
       }
     )
@@ -189,6 +190,7 @@ export class HomeComponent implements OnInit {
 
   // Determine which group is currently selected and pass onto the child panel
   openGroup(name){
+    console.log("OPENED GROUP");
     this.opened_group = name;
     console.log(name);
 
@@ -203,10 +205,11 @@ export class HomeComponent implements OnInit {
 
     this._groupService.get_channels(data).subscribe(
       d=> {
-        console.log(d);
+        console.log("CHANNELS: ", d);
         this.channels = d['value'];
       },
       error => {
+        console.log("FAILED TO GET DATA FOR THE CHANNELS IN A GROUP");
         console.error(error);
       }
     );
@@ -242,6 +245,7 @@ export class HomeComponent implements OnInit {
 
   // Responsible for handling the event call by the child component
   channelChangedHandler(name){
+    console.log("CHANGED CHANNEL: ", name);
     let found:boolean = false;
     for(let i = 0; i < this.channels.length; i++){
       if(this.channels[i].name == name){
@@ -256,6 +260,7 @@ export class HomeComponent implements OnInit {
 
   get_channel_users(name)
   {
+    console.log("GET CHANNEL USERS");
     this._groupService.get_channel_users(name).subscribe(
       data => { 
         console.log("CHANNEL USERS: ", data);
@@ -266,7 +271,7 @@ export class HomeComponent implements OnInit {
         }
         else 
         {
-
+          this.channel_users = [{username:"PERSON 1"}];
         }
       },
       error => {
@@ -308,6 +313,7 @@ export class HomeComponent implements OnInit {
   }
 
   delete_user(event) {
+    console.log("DELETING USER");
     console.log(this.all_users);
 
     if (! this.user_to_delete)
@@ -340,6 +346,7 @@ export class HomeComponent implements OnInit {
   }
 
   get_all_users() {
+    console.log("GETTING ALL USERS");
     this._userService.get_users().subscribe(
       data => {
         let x = data['value'];
@@ -353,6 +360,7 @@ export class HomeComponent implements OnInit {
         console.log("USERS: ", this.all_users);
       },
       error => {
+        console.log("FAILED TO GET USERS");
         console.error(error);
       }
     );
@@ -366,6 +374,7 @@ export class HomeComponent implements OnInit {
 
   upload_file()
   {
+    console.log("UPLOADING FILE");
     const fd = new FormData();
     // fd.append('image', this.selected_file, this.selected_file.name);
     let extension = this.selected_file.name.split('.').pop();
