@@ -125,7 +125,8 @@ app.post("/api/groups/channels/add", function(req, res){
 });
 
 app.get("/api/images/users/:user", function(req, res){
-  res.sendFile(__dirname + "/images/users/" + req.params.user);
+  users_component.get_image(req.params.user, res);
+  // res.sendFile(__dirname + "/images/users/" + req.params.user);
 });
 
 app.post('/api/images/upload', function(req, res) {

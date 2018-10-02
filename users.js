@@ -89,6 +89,21 @@ module.exports = function() {
         })
     }
 
+    this.get_image = function(username, response) {
+        // get user object
+        db.collection("users").findOne({username:username}, function(err, res) {
+            if (err) throw err;
+
+            response.sendFile(__dirname + '/' + res['image']);
+
+        })
+
+
+
+
+
+    }
+
     this.set_db = function (db){
         this.db = db;
     }
