@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   public username;
   public user_obj;
 
-  channel_users = [];
+  channel_users = ["one", "two"];
 
   editing_group = false;
 
@@ -271,7 +271,7 @@ export class HomeComponent implements OnInit {
         }
         else 
         {
-          this.channel_users = [{username:"PERSON 1"}];
+          // this.channel_users = ["}];
         }
       },
       error => {

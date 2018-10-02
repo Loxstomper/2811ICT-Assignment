@@ -94,7 +94,10 @@ module.exports = function() {
         db.collection("users").findOne({username:username}, function(err, res) {
             if (err) throw err;
 
-            response.sendFile(__dirname + '/' + res['image']);
+            if (res)
+                response.sendFile(__dirname + '/' + res['image']);
+            else
+                response.sendFile(__dirname + '/' + './images/users/default.png');
 
         })
 

@@ -29,6 +29,7 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/ass2";
 
 MongoClient.connect(url, {poolSize:10, useNewUrlParser: true}, function(err, client) {
+// MongoClient.connect(url, {poolSize:10}, function(err, client) {
   if (err) throw err;
 
   const dbName = "ass2";
